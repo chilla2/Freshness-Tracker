@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
-    //My notes are the best notes.
+    //New Note
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
