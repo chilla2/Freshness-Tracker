@@ -6,8 +6,9 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+    //My notes are the best notes.
     //Hadassah Comment IS AWESOME
-
+    //Jacque's big change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
