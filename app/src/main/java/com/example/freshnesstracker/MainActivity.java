@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
-
-    //My notes are the best notes.
     //Jacque's big change
+    //Michael's totally cool and original comment
+    //My notes are the best notes.
     //New Note
 
     @Override
