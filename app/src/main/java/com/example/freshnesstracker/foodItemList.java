@@ -1,45 +1,36 @@
 package com.example.freshnesstracker;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.io.InputStream;
+
+import android.content.Context;
+
+import com.google.gson.Gson;
+
+public class foodItemList {
+    //this class handles interactions with the item list file
 
 
-public class MainActivity extends AppCompatActivity {
-    ListManager mainInventory;
-    ArrayAdapter<String> arrayAdapter;
+
+
+    //FoodItem newItem = new FoodItem(1, "Milk", "Dairy");
+    Gson gson = new Gson();
+
     private static final String FILE_NAME = "food-item-list";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
-    private void onAddFoodItem(View view){
-    }
-    private void onSearch(View view){
-    }
 
 
 
     private void createFoodItem(String name, Integer date, String category) {
         //Create file object
-        File foodItemList = new File(this.getFilesDir(), FILE_NAME);
 
         //Create objects to open file in read and write mode
         FileReader fileReader = null;
@@ -51,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         String response = null;
 
         //Check for the existence of the file. If it does not exist, create it and write an empty string
-       /*
-        if (!foodItemList.exists()) {
+
+        /*if (!foodItemList.exists()) {
             try {
                 foodItemList.createNewFile();
                 fileWriter = new FileWriter(foodItemList.getAbsoluteFile());
@@ -95,7 +86,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        */
     }
+
+*/
+
+
+    }
+
 }

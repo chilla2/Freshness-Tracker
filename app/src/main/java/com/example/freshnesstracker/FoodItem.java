@@ -3,16 +3,23 @@ package com.example.freshnesstracker;
 import java.util.Date;
 
 public class FoodItem {
-    Date date;
-    FoodType foodType;
-    String name;
 
-    public FoodItem(Date aDate, FoodType aFoodType, String aName){
-        this.date = aDate;
-        this.foodType = aFoodType;
-        this.name = aName;
+    public Date date;
+    public String name;
+    public String category;
+    private Boolean isExpired;
+
+    public FoodItem(Date date, String name, String category) {
+        this.date = date;
+        this.name = name;
+        this.category = category;
     }
+
+
+
     // getters and setters
+    /*
+
     public Date getDate(){return date;}
     public void setDate(Date aDate){ this.date = aDate;}
 
@@ -28,6 +35,7 @@ public class FoodItem {
     public void saveFoodItem(){
 
     }
+    */
 
 
 }
