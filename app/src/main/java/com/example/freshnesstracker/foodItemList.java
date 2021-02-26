@@ -19,14 +19,10 @@ public class foodItemList {
 
 
 
-
     //FoodItem newItem = new FoodItem(1, "Milk", "Dairy");
     Gson gson = new Gson();
 
     private static final String FILE_NAME = "food-item-list";
-
-
-
 
 
     private void createFoodItem(String name, Integer date, String category) {

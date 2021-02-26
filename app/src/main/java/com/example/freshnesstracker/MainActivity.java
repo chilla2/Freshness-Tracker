@@ -13,9 +13,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 
@@ -28,14 +32,65 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boolean isFilePresent = isFilePresent(getActivity(), "storage.json");
+        if(isFilePresent) {
+            String jsonString = read(getActivity(), "storage.json");
+            //do the json parsing here and do the rest of functionality of app
+        } else {
+            boolean isFileCreated = create(getActivity, "storage.json", "{}");
+            if(isFileCreated) {
+                //proceed with storing the first item
+            } else {
+                //show error or try again.
+            }
+        }
     }
 
-    private void onAddFoodItem(View view){
+    private void onAddFoodItem(View view) {
+
     }
     private void onSearch(View view){
     }
 
+    private String read(Context context, String fileName) {
+        try {
+            FileInputStream fis = context.openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (FileNotFoundException fileNotFound) {
+            return null;
+        } catch (IOException ioException) {
+            return null;
+        }
+    }
 
+    private boolean create(Context context, String fileName, String jsonString){
+        String FILENAME = "storage.json";
+        try {
+            FileOutputStream fos = context.openFileOutput(fileName,Context.MODE_PRIVATE);
+            if (jsonString != null) {
+                fos.write(jsonString.getBytes());
+            }
+            fos.close();
+            return true;
+        } catch (FileNotFoundException fileNotFound) {
+            return false;
+        } catch (IOException ioException) {
+            return false;
+        }
+    }
+
+    public boolean isFilePresent(Context context, String fileName) {
+        String path = context.getFilesDir().getAbsolutePath() + "/" + fileName;
+        File file = new File(path);
+        return file.exists();
+    }
 
     private void createFoodItem(String name, Integer date, String category) {
         //Create file object
@@ -73,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         // Convert JsonObject to String Format
         String foodItemString = foodItem.toString();
