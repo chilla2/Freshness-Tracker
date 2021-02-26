@@ -1,9 +1,11 @@
 package com.example.freshnesstracker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListManager {
     ArrayList<FoodItem> inventory;
+    public ListManager(ArrayList<FoodItem> aInventory){this.inventory = aInventory;}
 
     private void sortByExpiry(ArrayList<FoodItem> foodList){
         // function will sort the ArrayList by date.
@@ -20,8 +22,20 @@ public class ListManager {
     public void insertFoodItem(FoodItem foodItem){
         // add FoodItem to inventory and sort
     }
-    public ArrayList<String> makeDisplayStringArray(){
+    public List<String> makeDisplayStringArray(){
         // make a list for displaying info in Listview
-        return null;
+        List<String> viewList = new ArrayList<>();
+
+        //given filters as an arguement? Return string array
+
+        //add all items to list
+        for (int i = 0; i < inventory.size(); i++) {
+            String result = inventory.get(i).name + " " + inventory.get(i).date.toString();
+
+            viewList.add(result);
+            viewList.add(result);
+        }
+
+        return viewList;
     }
 }
