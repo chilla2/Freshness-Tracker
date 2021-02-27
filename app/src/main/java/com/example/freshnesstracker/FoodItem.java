@@ -5,20 +5,22 @@ import java.util.Date;
 public class FoodItem {
 
     public Date date;
+    public FoodType foodType;
     public String name;
-    public String category;
     private Boolean isExpired;
 
-    public FoodItem(Date date, String name, String category) {
-        this.date = date;
-        this.name = name;
-        this.category = category;
+
+
+    public FoodItem(Date _date, FoodType _foodType, String _name){
+        this.date = _date;
+        this.foodType = _foodType;
+        this.name = _name;
+        this.isExpired = false;
     }
 
 
 
     // getters and setters
-    /*
 
     public Date getDate(){return date;}
     public void setDate(Date aDate){ this.date = aDate;}
@@ -35,7 +37,7 @@ public class FoodItem {
     public void saveFoodItem(){
 
     }
-    */
+
 
 
 }
