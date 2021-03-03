@@ -33,7 +33,6 @@ public class ListManager {
             String result = inventory.get(i).name + " " + inventory.get(i).date.toString();
 
             viewList.add(result);
-            viewList.add(result);
         }
 
         return viewList;
