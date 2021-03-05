@@ -11,7 +11,7 @@
         android:theme="@style/Theme.FreshnessTracker">
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".EditItemActivity" />
-        <activity android:name=".addItemActivity" />
+        <activity android:name=".AddItemActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

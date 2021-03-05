@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".addItemActivity">
+    tools:context=".AddItemActivity">
 
     <Button
         android:id="@+id/submitItem"
@@ -13,7 +13,7 @@
         android:layout_marginTop="500dp"
         android:layout_marginEnd="84dp"
         android:layout_marginRight="84dp"
-        android:text="Button"
+        android:text="Done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
