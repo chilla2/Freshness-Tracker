@@ -19,11 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     ListManager mainInventory;
@@ -76,17 +71,5 @@ public class MainActivity extends AppCompatActivity {
         foodListDBReference.child("items").child(name).setValue(foodItem);
         //using setValue overwrites the data at the specified location.
         // to allow for multiple items with the same name, this will need to be changed
-    }
-
-    private void onSearch(View view){
-        //this will be handled in its own activity
-    }
-
-    private void createItem(String name, Date date, FoodType category) {
-        //this will be handled in its own activity
-    }
-
-    private void editItem() {
-        //this will be handled in its own activity
     }
 }
