@@ -1,11 +1,24 @@
 package com.example.freshnesstracker;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class ListManager {
     ArrayList<FoodItem> inventory;
+
+    public ListManager(ArrayList<FoodItem> inventory) {
+        this.inventory = inventory;
+    }
+
+    private void saveItem(FoodType foodItem) {
+        //April: I added this to the AddItemActivity
+    }
+
+
 
     private void sortByExpiry(ArrayList<FoodItem> foodList){
 

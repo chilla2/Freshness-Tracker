@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "863435934538",
+    "firebase_url": "https://freshness-tracker-default-rtdb.firebaseio.com",
+    "project_id": "freshness-tracker",
+    "storage_bucket": "freshness-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863435934538:android:53e218ab8f96e300bc0fb3",
+        "android_client_info": {
+          "package_name": "com.example.freshnesstracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863435934538-e05h1vc4f8vd4p4mdg2vs70pdd3hajkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAhbo0JCRadt69CHfKn_D9nSpaM3epdZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863435934538-e05h1vc4f8vd4p4mdg2vs70pdd3hajkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
