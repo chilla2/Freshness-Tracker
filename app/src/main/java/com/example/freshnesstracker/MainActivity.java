@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     ListManager mainInventory;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         };
         foodListDBReference.addValueEventListener(postListener);
 
+      //testing
         addFoodItem(mDate, "Milk", mFoodType);
     }
 
@@ -82,11 +84,8 @@ public class MainActivity extends AppCompatActivity {
         //this will be handled in its own activity
     }
 
-    private void createItem(String name, Date date, FoodType category) {
-        //this will be handled in its own activity
-    }
-
     private void editItem() {
         //this will be handled in its own activity
     }
+
 }
