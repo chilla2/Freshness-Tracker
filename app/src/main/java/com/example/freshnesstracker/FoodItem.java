@@ -20,7 +20,6 @@ public class FoodItem {
     }
 
 
-
     public Date getDate(){return date;}
     public void setDate(Date aDate){ this.date = aDate;}
 

@@ -4,6 +4,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -78,13 +79,19 @@ public class ListManager {
     public void insertFoodItem(FoodItem foodItem){
         // add FoodItem to inventory and sort (and save to file?)
     }
-    public ArrayList<String> makeDisplayStringArray(){
-        // make a list for displaying info in ListView (if that is what we decide is needed.)
-        return null;
+    public List<String> makeDisplayStringArray(){
+        // make a list for displaying info in Listview
+        List<String> viewList = new ArrayList<>();
+
+        //given filters as an arguement? Return string array
+
+        //add all items to list
+        for (int i = 0; i < inventory.size(); i++) {
+            String result = inventory.get(i).name + " " + inventory.get(i).date.toString();
+
+            viewList.add(result);
+        }
+
+        return viewList;
     }
-
-
-
-
-
 }
