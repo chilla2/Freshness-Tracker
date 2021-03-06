@@ -9,7 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FreshnessTracker">
-        <activity android:name=".SearchActivity"></activity>
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/searchable" />
+
+        <activity android:name=".SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity android:name=".EditItemActivity" />
         <activity android:name=".AddItemActivity" />
         <activity android:name=".MainActivity">
