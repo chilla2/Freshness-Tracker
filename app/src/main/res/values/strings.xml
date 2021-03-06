@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Freshness Tracker</string>
+    <string name="app_label">Freshness Tracker</string>
+    <string name="search_hint">Search for Food Item</string>
     <string-array name="foodTypeList">
         <item>Dairy</item>
         <item>Meat</item>
