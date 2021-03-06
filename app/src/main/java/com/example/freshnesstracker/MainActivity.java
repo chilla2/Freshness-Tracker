@@ -135,14 +135,21 @@ public class MainActivity extends AppCompatActivity {
         //get food list size
         int sizeList = viewFoodList.size();
         Log.d(TAG_CALL_DISPLAY, "The size of food list: " + sizeList); //correct
-        Log.d(TAG_CALL_DISPLAY, "The first item in food list: " + viewFoodList.get(0)); //correct
+        //Log.d(TAG_CALL_DISPLAY, "The first item in food list: " + viewFoodList.get(0)); //correct
 
+        //to avoid error, only print list if size list is non-zero
+        if (sizeList > 0) {
 
-        //add things to array adapter
-        for (int i = 0; i < viewFoodList.size(); i++) {
-            String lineToAdd = viewFoodList.get(i);
-            arrayAdapter.add(lineToAdd);
-            Log.d(TAG_CALL_DISPLAY, "Current index in displaying Loop: " + i);
+            //add things to array adapter
+            for (int i = 0; i < viewFoodList.size(); i++) {
+                String lineToAdd = viewFoodList.get(i);
+                arrayAdapter.add(lineToAdd);
+                Log.d(TAG_CALL_DISPLAY, "Current index in displaying Loop: " + i);
+            }
+        }
+        else {
+            String zeroListErrorMessage = "No food items detected in list";
+            arrayAdapter.add(zeroListErrorMessage);
         }
 
     }
