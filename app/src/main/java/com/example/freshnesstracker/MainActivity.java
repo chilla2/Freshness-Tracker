@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, viewFoodList);
 
         //connecting ArrayAdapter to ListView
-        ListView listView = findViewById(R.id.viewFoodList);
+        ListView listView = findViewById(R.id.recyclerView2);
         listView.setAdapter(arrayAdapter);
 
         //display fake inventory
