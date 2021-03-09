@@ -15,6 +15,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
+        android:onClick="onAdd"
         android:scaleX="1.25"
         android:scaleY="1.25"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,8 +58,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
-        android:layout_width="412dp"
-        android:layout_height="640dp"
+        android:layout_width="410dp"
+        android:layout_height="592dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,12 +73,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="12dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp"
+        android:onClick="onSort"
         android:paddingLeft="0dp"
+        android:paddingTop="0dp"
         android:paddingRight="0dp"
+        android:paddingBottom="0dp"
         android:text="Sort By"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,12 +90,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="12dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp"
+        android:onClick="onSearch"
         android:paddingLeft="0dp"
+        android:paddingTop="0dp"
         android:paddingRight="0dp"
+        android:paddingBottom="0dp"
         android:text="Search"
+        android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/sortButton"
         app:layout_constraintTop_toTopOf="parent" />
 

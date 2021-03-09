@@ -7,7 +7,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class SearchActivity extends ListActivity {
+public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

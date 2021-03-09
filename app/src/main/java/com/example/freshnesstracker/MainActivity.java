@@ -1,5 +1,6 @@
 package com.example.freshnesstracker;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
         // to allow for multiple items with the same name, this will need to be changed
     }
 
-    private void onSearch(View view){
+    public void onSearch(View view){
         //this will be handled in its own activity
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 
     //called to display ListManager's to display; use on creation and for updates
@@ -156,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void editItem() {
         //this will be handled in its own activity
+    }
+    public void onAdd(View view) {
+        Intent intent = new Intent(this, AddItemActivity.class);
+        startActivity(intent);
+    }
+    public void onSort(View view){
+        //this will be handled in its own activity
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 
 }

@@ -11,8 +11,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.view.View;
+
 import java.util.Date;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -111,6 +112,10 @@ public class AddItemActivity extends AppCompatActivity {
     public void saveItem(Date date, String name, FoodType foodType) {
 
     }
+    public void onSaveFoodItem(View view){
+        FoodItem foodItem1 = new FoodItem( new Date(121, 2, 11), "yogurt", FoodType.Dairy);
+    }
+
 
     public void onRadioButtonClicked(View view) {
     }
