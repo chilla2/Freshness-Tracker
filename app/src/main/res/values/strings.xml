@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Freshness Tracker</string>
+<string-array name="categories_array">
+    <item>Dairy</item>
+    <item>Bakery</item>
+    <item>Produce</item>
+    <item>Canned</item>
+    <item>Meat</item>
+    <item>Custom</item>
+</string-array>
 </resources>

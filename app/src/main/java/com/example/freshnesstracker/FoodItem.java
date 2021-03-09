@@ -1,40 +1,40 @@
 package com.example.freshnesstracker;
 
-import java.util.Date;
+import com.google.firebase.database.IgnoreExtraProperties;
 
+@IgnoreExtraProperties
 public class FoodItem {
-
-    public Date date;
+    public String itemId;
+    public int day;
+    public int month;
+    public int year;
     public String name;
-    public FoodType foodType;
+    public String foodType;
     private Boolean isExpired;
 
     public FoodItem() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public FoodItem(Date date, String name, FoodType foodType) {
-        this.date = date;
+    public FoodItem(String itemId, int day, int month, int year, String name, String foodType) {
+        this.itemId = itemId;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         this.name = name;
         this.foodType = foodType;
     }
 
+    public String getItemId() {
+        return itemId;
+    }
 
+    public Integer getDay(){return day;}
+    public Integer getMonth(){return month;}
+    public Integer getYear(){return year;}
 
-    public Date getDate(){return date;}
-    public void setDate(Date aDate){ this.date = aDate;}
-
-
-    public FoodType getFoodType(){return foodType;}
-    public void setFoodType(FoodType aFoodType){this.foodType = aFoodType;}
-
+    public String getFoodType(){return foodType;}
 
     public String getName(){return name;}
-    public void setName(String aName){this.name = aName;}
-
-    // save food item to database...
-    public void saveFoodItem(){
-
-    }
 
 }
