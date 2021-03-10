@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //getting the selected item
                  FoodItem foodItem = foodItems.get(i);
-
             }
         });
 
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
 
