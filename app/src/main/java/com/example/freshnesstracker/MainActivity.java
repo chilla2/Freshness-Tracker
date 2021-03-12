@@ -29,25 +29,33 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     ListManager mainInventory;
     ArrayAdapter<String> arrayAdapter;
+    //RecyclerView Declarations
+    private RecyclerView recyclerViewFoodItems;
+    private RecyclerView.Adapter adapter;
 
     private static final String TAG = "MainActivity";
 
     private FirebaseDatabase foodListDB;
     private DatabaseReference foodListDBReference;
 
+    //attempting to use Firebase view
+    //FirebaseRecyclerOptions<FoodItem> options = new FirebaseRecyclerOptions.Builder<FoodItem>().setQuery(query, FoodItem.class).build();
+
     //variables for testing purposes
     Date mDate = new Date();
     FoodType mFoodType = FoodType.Dairy;
 
-    //add in
+    //add in---temporary piece for list view
     List<String> viewFoodList;
 
     //log cat tags
@@ -58,9 +66,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //START: Recycler View implementation with Fake Inventory List made in onCreate
+        //TO DO: Put in onStart and get list from FIREBASE instead
         ArrayList<FoodItem> foodItemsList = new ArrayList<>();
 
-        // will need this when list is ready: this.mainInventory = new ListManager(inventory);
+        Log.d(TAG, "In on create start");
+        this.mainInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
+        ArrayList<FoodItem> recyclerViewFoodItems = mainInventory.inventory;
+        this.recyclerViewFoodItems = (RecyclerView) findViewById(R.id.recyclerView2);
+        ListManager fakeInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
+
+        Log.d(TAG, "Now setting up adapter");
+
+        adapter = new FoodItemAdapter(fakeInventory.inventory);
+
+        this.recyclerViewFoodItems.setAdapter(adapter);
+        Log.d(TAG, "Now calling layout manager");
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        this.recyclerViewFoodItems.setLayoutManager(mLayoutManager);
+
+        /*NOTE: To update list, use this code onStart (similar to what is present)
+            foodItems.clear(); //your food item list used throughout, or get it from ListManager
+            //work with adding items from adapter
+            adapter.notifyDataSetChanged(); //just notify the data about the change.
+            //Stack Overflow post with examples of working with updating RecyclerView Lists:
+            //https://stackoverflow.com/questions/31367599/how-to-update-recyclerview-adapter-data
+         */
+
+        //END Recycler View Active Code
 
         // Read from the database
         foodListDB = FirebaseDatabase.getInstance();
@@ -85,26 +118,12 @@ public class MainActivity extends AppCompatActivity {
       //testing
         addFoodItem(mDate, "Milk", mFoodType);
 
-        //Temporary work to get ListView to work with Array Adapter
-        //ListManager fakeInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
-
-        //data base set up inventory
-        ListManager dataBaseInventory = new ListManager(foodItemsList);
-
-        //Adapter and place holder list
-        viewFoodList = new ArrayList<>(); //question--activity main here?
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, viewFoodList);
-
-        //connecting ArrayAdapter to ListView
-        ListView listView = findViewById(R.id.recyclerView2);
-        listView.setAdapter(arrayAdapter);
-
         //display fake inventory
         Log.d(TAG_CALL_DISPLAY, "About to call function in Create");
         //callDisplay(fakeInventory);
 
         //display database inventory
-        callDisplay(dataBaseInventory);
+        //callDisplay(dataBaseInventory);
     }
 
     //this will later be moved to the AddFoodItemActivity
@@ -168,6 +187,13 @@ public class MainActivity extends AppCompatActivity {
         //this will be handled in its own activity
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    //will clear current reyclcer view of objects and re-display them; call after list updates
+    public void resetRecyclerView() {
+        //however data is passed:
+        //data.clear();
+        //adapter.notifyDataSetChanged();
     }
 
 }
