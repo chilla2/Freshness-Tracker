@@ -10,4 +10,5 @@
         <item>Canned</item>
         <item>Custom</item>
     </string-array>
+    <string name="expirationDate">mm/dd/yy</string>
 </resources>
