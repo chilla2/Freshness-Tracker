@@ -2,8 +2,11 @@ package com.example.freshnesstracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -11,7 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.core.view.View;
+//import com.google.firebase.database.core.view.View;
 
 import java.util.Date;
 import android.widget.ArrayAdapter;
@@ -20,7 +23,7 @@ import android.widget.Spinner;
 public class AddItemActivity extends AppCompatActivity {
 
     private FirebaseDatabase foodListDB;
-    private DatabaseReference foodListDBReference;
+    private DatabaseReference databaseItems;;
     private static final String TAG = "AddItemActivity";
 
 
@@ -28,8 +31,9 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        databaseItems = FirebaseDatabase.getInstance().getReference("foodItemsList");
 
-        Spinner spinner = (Spinner) findViewById(R.id.foodType);
+        /*Spinner spinner = (Spinner) findViewById(R.id.foodType);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.foodTypeList, android.R.layout.simple_spinner_item);
@@ -37,13 +41,15 @@ public class AddItemActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+*/
+
+        //foodListDB = FirebaseDatabase.getInstance();
 
 
-        foodListDB = FirebaseDatabase.getInstance();
-        foodListDBReference = foodListDB.getReference();
 
 
-        ChildEventListener childEventListener = new ChildEventListener() {
+
+       /* ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
@@ -93,12 +99,21 @@ public class AddItemActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "postComments:onCancelled", databaseError.toException());
             }
-        };
-        foodListDBReference.addChildEventListener(childEventListener);
+        };*/
+       // foodListDBReference.addChildEventListener(childEventListener);
 
 
     }
 
+    public void onDone(View view){
+        String id = databaseItems.push().getKey();
+        FoodItem food = new FoodItem(id, new Date(121, 02, 31), "Cheddar Cheese", FoodType.Dairy);
+        databaseItems.child(id).setValue(food);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+
+    }
     /*
     private FoodItem getNewItemData() {
         This should take input from user and create food item to be passed into the save method
@@ -112,9 +127,9 @@ public class AddItemActivity extends AppCompatActivity {
     public void saveItem(Date date, String name, FoodType foodType) {
 
     }
-    public void onSaveFoodItem(View view){
+    /*public void onSaveFoodItem(View view){
         FoodItem foodItem1 = new FoodItem( new Date(121, 2, 11), "yogurt", FoodType.Dairy);
-    }
+    }*/
 
 
     public void onRadioButtonClicked(View view) {

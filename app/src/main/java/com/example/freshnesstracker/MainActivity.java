@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.widget.EditText;
 import android.widget.ListView;
 
 
@@ -36,27 +39,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     ListManager mainInventory;
     ArrayAdapter<String> arrayAdapter;
+
+    EditText editTextName;
+    //DatePicker picker;
+    //Spinner spinnerCategory;
+    ListView listViewItems;
+    //Button buttonAddItem;
+
+
+    //our database reference object
+    DatabaseReference databaseItems;
+    ArrayList<FoodItem> foodItems;
+
+
     //RecyclerView Declarations
-    private RecyclerView recyclerViewFoodItems;
-    private RecyclerView.Adapter adapter;
+    RecyclerView recyclerViewFoodItems;
+    RecyclerView.Adapter adapter;
 
     private static final String TAG = "MainActivity";
 
     private FirebaseDatabase foodListDB;
-    private DatabaseReference foodListDBReference;
+
 
     //attempting to use Firebase view
     //FirebaseRecyclerOptions<FoodItem> options = new FirebaseRecyclerOptions.Builder<FoodItem>().setQuery(query, FoodItem.class).build();
 
     //variables for testing purposes
-    Date mDate = new Date();
-    FoodType mFoodType = FoodType.Dairy;
+    //Date mDate = new Date();
+    //FoodType mFoodType = FoodType.Dairy;
 
     //add in---temporary piece for list view
-    List<String> viewFoodList;
+
 
     //log cat tags
     public static final String TAG_CALL_DISPLAY = "CallDisplayFunc";
@@ -66,19 +82,35 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //getting the reference of FoodItem node
+        databaseItems = FirebaseDatabase.getInstance().getReference("foodItemsList");
+
         //START: Recycler View implementation with Fake Inventory List made in onCreate
         //TO DO: Put in onStart and get list from FIREBASE instead
-        ArrayList<FoodItem> foodItemsList = new ArrayList<>();
 
+        // Changed this name to foodItems to merge different codes and initiated the property with fake inventory
+        // **ArrayList<FoodItem> foodItemsList = new ArrayList<>();
+        foodItems = BuildFakeInventory.buildFakeInventory();
         Log.d(TAG, "In on create start");
-        this.mainInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
-        ArrayList<FoodItem> recyclerViewFoodItems = mainInventory.inventory;
+        // initiated with the variable instead of hardcode
+        // **this.mainInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
+        this.mainInventory = new ListManager(foodItems);
+
+        // This code is using the same name as the RecyclerView, can it be renamed? Do we need it?  I don't see where it is being used.
+        // **ArrayList<FoodItem> recyclerViewFoodItems = mainInventory.inventory;
+
+        // sort list before dislaying
+        mainInventory.sortByExpiry();
+
         this.recyclerViewFoodItems = (RecyclerView) findViewById(R.id.recyclerView2);
-        ListManager fakeInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
+
+        //not sure why we made another ListManager that is a copy
+        // **ListManager fakeInventory = new ListManager(BuildFakeInventory.buildFakeInventory());
 
         Log.d(TAG, "Now setting up adapter");
 
-        adapter = new FoodItemAdapter(fakeInventory.inventory);
+        //changed to mainInventory **adapter = new FoodItemAdapter(fakeInventory.inventory);
+        adapter = new FoodItemAdapter(mainInventory.inventory);
 
         this.recyclerViewFoodItems.setAdapter(adapter);
         Log.d(TAG, "Now calling layout manager");
@@ -96,94 +128,64 @@ public class MainActivity extends AppCompatActivity  {
         //END Recycler View Active Code
 
         // Read from the database
-        foodListDB = FirebaseDatabase.getInstance();
-        foodListDBReference = foodListDB.getReference();
 
-        //update array list as items are added to the database
-        ValueEventListener postListener = new ValueEventListener() {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //attaching value event listener
+        databaseItems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Log.e("Get Data", postSnapshot.getValue(FoodItem.class).toString());
-                    foodItemsList.add(postSnapshot.getValue(FoodItem.class));
+
+                //clearing the previous items list
+                foodItems.clear();
+
+                //iterating through all the nodes
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    //getting item
+                    FoodItem foodItem = postSnapshot.getValue(FoodItem.class);
+                    //adding item to the list
+                    foodItems.add(foodItem);
+
                 }
+                mainInventory.sortByExpiry();
+                adapter.notifyDataSetChanged();
+
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, "loadPost:onCancelled", databaseError.toException());
+
             }
-        };
-        foodListDBReference.addValueEventListener(postListener);
-
-      //testing
-        addFoodItem(mDate, "Milk", mFoodType);
-
-        //display fake inventory
-        Log.d(TAG_CALL_DISPLAY, "About to call function in Create");
-        //callDisplay(fakeInventory);
-
-        //display database inventory
-        //callDisplay(dataBaseInventory);
+        });
     }
 
-    //this will later be moved to the AddFoodItemActivity
-    public void addFoodItem(Date date, String name, FoodType foodType) {
-        FoodItem foodItem = new FoodItem(date, name, foodType);
-        foodListDBReference.child("items").child(name).setValue(foodItem);
-        //using setValue overwrites the data at the specified location.
-        // to allow for multiple items with the same name, this will need to be changed
-    }
 
-    public void onSearch(View view){
-        //this will be handled in its own activity
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
-    }
+    public void onSearch(View view) {
+        // needs to  get name from view
+        String search = "milk";
 
-    //called to display ListManager's to display; use on creation and for updates
-    public void callDisplay(ListManager listManager) {
-
-
-        //clear array adapter and current food view
-        arrayAdapter.clear();
-        viewFoodList.clear();
-
-        //get required values from list; put filters here later?
-        viewFoodList = listManager.makeDisplayStringArray();
-
-        System.out.println(viewFoodList);
-        Log.d(TAG_CALL_DISPLAY, "After view Food List Set");
-
-        //get food list size
-        int sizeList = viewFoodList.size();
-        Log.d(TAG_CALL_DISPLAY, "The size of food list: " + sizeList); //correct
-        //Log.d(TAG_CALL_DISPLAY, "The first item in food list: " + viewFoodList.get(0)); //correct
-
-        //to avoid error, only print list if size list is non-zero
-        if (sizeList > 0) {
-
-            //add things to array adapter
-            for (int i = 0; i < viewFoodList.size(); i++) {
-                String lineToAdd = viewFoodList.get(i);
-                arrayAdapter.add(lineToAdd);
-                Log.d(TAG_CALL_DISPLAY, "Current index in displaying Loop: " + i);
-            }
-        }
-        else {
-            String zeroListErrorMessage = "No food items detected in list";
-            arrayAdapter.add(zeroListErrorMessage);
-        }
+        ListManager working = new ListManager(mainInventory.inventory);
+        foodItems.clear();
+        foodItems = working.searchByName(search);
+        adapter.notifyDataSetChanged();
 
     }
+
 
     private void editItem() {
         //this will be handled in its own activity
     }
+
     public void onAdd(View view) {
         Intent intent = new Intent(this, AddItemActivity.class);
         startActivity(intent);
     }
-    public void onSort(View view){
+
+    public void onSort(View view) {
         //this will be handled in its own activity
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
@@ -195,5 +197,4 @@ public class MainActivity extends AppCompatActivity  {
         //data.clear();
         //adapter.notifyDataSetChanged();
     }
-
 }

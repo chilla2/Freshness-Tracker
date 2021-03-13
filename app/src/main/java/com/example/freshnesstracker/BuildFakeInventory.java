@@ -39,7 +39,7 @@ public class BuildFakeInventory {
         // Create the FoodItems and add to the fakeInventory.
         ArrayList<FoodItem> fakeInventory = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            FoodItem p = new FoodItem(dateDates.get(i), nameList.get(i), typeList.get(i));
+            FoodItem p = new FoodItem("123", dateDates.get(i), nameList.get(i), typeList.get(i));
             fakeInventory.add(p);
         }
         return fakeInventory;

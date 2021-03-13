@@ -21,7 +21,7 @@ public class ListManager {
 
 
 
-    private void sortByExpiry(ArrayList<FoodItem> foodList){
+    public void sortByExpiry(){
 
         Comparator<FoodItem> dateComparator = new Comparator<FoodItem>() {
             @Override

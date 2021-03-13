@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class FoodItem {
-
+    public String id;
     public Date date;
     public String name;
     public FoodType foodType;
@@ -17,7 +17,8 @@ public class FoodItem {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public FoodItem(Date date, String name, FoodType foodType) {
+    public FoodItem(String id, Date date, String name, FoodType foodType) {
+        this.id = id;
         this.date = date;
         this.name = name;
         this.foodType = foodType;
