@@ -2,8 +2,15 @@ package com.example.freshnesstracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -15,9 +22,12 @@ import java.util.Date;
 
 public class AddItemActivity extends AppCompatActivity {
 
-    private FirebaseDatabase foodListDB;
-    private DatabaseReference foodListDBReference;
     private static final String TAG = "AddItemActivity";
+    EditText editTextName;
+    DatePicker picker;
+    Spinner spinnerCategory;
+    Button saveItem;
+    DatabaseReference databaseItems;
 
 
     @Override
@@ -25,78 +35,61 @@ public class AddItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        foodListDB = FirebaseDatabase.getInstance();
-        foodListDBReference = foodListDB.getReference();
+        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+
+        editTextName = (EditText) findViewById(R.id.editTextName);
+        picker = (DatePicker)findViewById(R.id.datePicker);
+        spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
+        saveItem = (Button) findViewById(R.id.saveItem);
 
 
-        ChildEventListener childEventListener = new ChildEventListener() {
+        saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+            public void onClick(View view) {
+                addItem();
+                switchToMain();
 
-                // A new item has been added, add it to the displayed list
-                FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
-
-                // ...
             }
+        });
+    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so displayed the changed item.
-                FoodItem newItem = dataSnapshot.getValue(FoodItem.class);
-                String itemKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so remove it.
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-                // FoodItem movedComment = dataSnapshot.getValue(Comment.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-            }
-        };
-        foodListDBReference.addChildEventListener(childEventListener);
-
-
+    private void switchToMain() {
+        Intent switchToMainIntent = new Intent(this, MainActivity.class);
+        Log.d(TAG, "Switching to main activity");
+        startActivity(switchToMainIntent);
     }
 
     /*
-    private FoodItem getNewItemData() {
-        This should take input from user and create food item to be passed into the save method
+     * This method is saving a new item to the
+     * Firebase Realtime Database
+     * */
+    private void addItem() {
+        //getting the values to save
+        String name = editTextName.getText().toString().trim();
+        int day = picker.getDayOfMonth();
+        int month = picker.getMonth();
+        int year = picker.getYear();
+        String category = spinnerCategory.getSelectedItem().toString();
+
+        //checking if the value is provided
+        if (!TextUtils.isEmpty(name)) {
+            //getting a unique id using push().getKey() method
+            //it will create a unique id and we will use it as the Primary Key for our item
+            String id = databaseItems.push().getKey();
+            //creating an item Object
+            FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
+            //Saving the item
+            databaseItems.child(id).setValue(foodItem);
+            Log.d(TAG, "Adding item data to database");
+            //setting edittext to blank again
+            editTextName.setText("");
+            //displaying a success toast
+            Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
+        } else {
+            //if the value is not given displaying a toast
+            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+        }
     }
-    */
 
-
-
-
-    //Later, this method can just take a FoodItem as a parameter
-    public void saveItem(Date date, String name, FoodType foodType) {
-
-    }
 
 }

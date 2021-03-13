@@ -19,7 +19,7 @@ public class ListManager {
     }
 
 
-
+/*
     private void sortByExpiry(ArrayList<FoodItem> foodList){
 
         Comparator<FoodItem> dateComparator = new Comparator<FoodItem>() {
@@ -31,6 +31,8 @@ public class ListManager {
 
         Collections.sort(inventory, dateComparator);
     }
+
+ */
 
     public ArrayList<FoodItem> searchByType(FoodType  foodType){
         // function will create a new list(new ListManager?) with only specified type and then sort it by date

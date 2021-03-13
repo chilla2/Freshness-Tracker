@@ -31,59 +31,43 @@ import android.widget.DatePicker;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText editTextName;
+    private static final int ADD_ACTIVITY_REQUEST_CODE = 0;
+
+    EditText editItemName;
     DatePicker picker;
     Spinner spinnerCategory;
     ListView listViewItems;
 
-    Button buttonAddItem;
-
     //a list to store all the artist from firebase database
     List<FoodItem> foodItems;
+
+    FloatingActionButton addButton;
 
     //our database reference object
     DatabaseReference databaseItems;
 
     private static final String TAG = "MainActivity";
 
-    private FirebaseDatabase foodListDB;
-    private DatabaseReference foodListDBReference;
-    ArrayList<FoodItem> foodItemsList;
-
-    //variables for testing purposes
-    Date mDate = new Date();
-    FoodType mFoodType = FoodType.Dairy;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Calling onCreate method");
         setContentView(R.layout.activity_main);
 
-        //getting the reference of artists node
+        //getting the reference of items node
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
-
-        //getting views
-        editTextName = (EditText) findViewById(R.id.editTextName);
-        picker=(DatePicker)findViewById(R.id.datePicker);
-        spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
         listViewItems = (ListView) findViewById(R.id.listViewItems);
-
-        buttonAddItem = (Button) findViewById(R.id.buttonAddItem);
-
         //list to store food items
         foodItems = new ArrayList<>();
 
-
-        //adding an onclicklistener to button
-        buttonAddItem.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //calling the method addItem()
-                //the method is defined below
-                //this method is actually performing the write operation
-                addItem();
+            public void onClick(View v) {
+                System.out.println("Button Clicked");
+                Log.d(TAG, "Switching to add item activity");
+                switchToAddItem();
+                //startActivityForResult(addItemIntent, ADD_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -104,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
 
@@ -150,10 +135,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void switchToAddItem() {
+        Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
+        startActivity(switchToAddItemIntent);
+    }
+
     private boolean updateItem(String id, int day, int month, int year, String name, String category) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
-
         //updating item
         FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
         dR.setValue(foodItem);
@@ -164,45 +153,59 @@ public class MainActivity extends AppCompatActivity {
     private boolean deleteItem(String id) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
-
         //removing item
         dR.removeValue();
-
         Toast.makeText(getApplicationContext(), "Item Deleted", Toast.LENGTH_LONG).show();
-
         return true;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "Calling onStart method");
         //attaching value event listener
         databaseItems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Calling onDataChange method");
 
-                //clearing the previous items list
-                foodItems.clear();
+                //Call function to iterate through DB nodes and add items to list
+                List<FoodItem> workingList = loopThroughDBAndAddToList(dataSnapshot);
 
-                //iterating through all the nodes
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    //getting item
-                    FoodItem foodItem = postSnapshot.getValue(FoodItem.class);
-                    //adding item to the list
-                    foodItems.add(foodItem);
+                if (!(workingList.size() == 0)) {
+                    Log.d(TAG, "Working list is not empty");
+                } else {
+                    Log.d(TAG, "Working list is empty");
                 }
 
                 //creating adapter
-                FoodItemsList artistAdapter = new FoodItemsList(MainActivity.this, foodItems);
-                //attaching adapter to the listview
-                listViewItems.setAdapter(artistAdapter);
+                FoodItemsList itemAdapter = new FoodItemsList(MainActivity.this, workingList);
+                Log.d(TAG, "Attaching adapter to listViewItems");
+                    //attaching adapter to the listview
+                    listViewItems.setAdapter(itemAdapter);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
+    }
+
+    //This method is called in the onDataChange method (in onStart)
+    public List<FoodItem> loopThroughDBAndAddToList(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "Running method - loopThroughDBAndAddToList");
+        Log.d(TAG, "Clearing list");
+        foodItems.clear();
+        //iterating through all the nodes
+        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+            Log.d(TAG, "Getting item...");
+            //getting item
+            FoodItem foodItem = postSnapshot.getValue(FoodItem.class);
+            //adding item to the list
+            Log.d(TAG, "Adding item to list");
+            foodItems.add(foodItem);
+        }
+        return foodItems;
     }
 
 
@@ -210,16 +213,16 @@ public class MainActivity extends AppCompatActivity {
      * This method is saving a new item to the
      * Firebase Realtime Database
      * */
-    private void addItem() {
+    private void addItem(String name, int day, int month, int year, String category) {
         //getting the values to save
-        String name = editTextName.getText().toString().trim();
-        int day = picker.getDayOfMonth();
-        int month = picker.getMonth();
-        int year = picker.getYear();
-        String category = spinnerCategory.getSelectedItem().toString();
+        //String name = editItemName.getText().toString().trim();
+        //int day = picker.getDayOfMonth();
+        //int month = picker.getMonth();
+        //int year = picker.getYear();
+        //String category = spinnerCategory.getSelectedItem().toString();
 
         //checking if the value is provided
-        if (!TextUtils.isEmpty(name)) {
+        //if (!TextUtils.isEmpty(name)) {
 
             //getting a unique id using push().getKey() method
             //it will create a unique id and we will use it as the Primary Key for our item
@@ -232,14 +235,13 @@ public class MainActivity extends AppCompatActivity {
             databaseItems.child(id).setValue(foodItem);
 
             //setting edittext to blank again
-            editTextName.setText("");
+            //editItemName.setText("");
 
             //displaying a success toast
             Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
-        } else {
+        //} else {
             //if the value is not given displaying a toast
-            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
-        }
+            //Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+        //}
     }
-
 }

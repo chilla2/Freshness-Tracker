@@ -9,10 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FreshnessTracker">
+        android:usesCleartextTraffic="true" >
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".EditItemActivity" />
-        <activity android:name=".AddItemActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".AddItemActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
