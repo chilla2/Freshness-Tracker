@@ -12,7 +12,9 @@
         android:usesCleartextTraffic="true" >
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".EditItemActivity" />
-        <activity android:name=".AddItemActivity"
+        <activity
+            android:name=".AddItemActivity"
+            android:label="Add Item"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" >
