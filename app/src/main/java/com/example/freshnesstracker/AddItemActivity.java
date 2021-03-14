@@ -34,21 +34,16 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
-
         editTextName = (EditText) findViewById(R.id.editTextName);
         picker = (DatePicker)findViewById(R.id.datePicker);
         spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
         saveItem = (Button) findViewById(R.id.saveItem);
-
-
         saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addItem();
                 switchToMain();
-
             }
         });
     }
@@ -70,7 +65,6 @@ public class AddItemActivity extends AppCompatActivity {
         int month = picker.getMonth();
         int year = picker.getYear();
         String category = spinnerCategory.getSelectedItem().toString();
-
         //checking if the value is provided
         if (!TextUtils.isEmpty(name)) {
             //getting a unique id using push().getKey() method
@@ -90,6 +84,4 @@ public class AddItemActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
     }
-
-
 }

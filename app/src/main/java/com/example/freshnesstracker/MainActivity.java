@@ -31,21 +31,13 @@ import android.widget.DatePicker;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int ADD_ACTIVITY_REQUEST_CODE = 0;
-
-    EditText editItemName;
     DatePicker picker;
-    Spinner spinnerCategory;
     ListView listViewItems;
-
     //a list to store all the artist from firebase database
     List<FoodItem> foodItems;
-
     FloatingActionButton addButton;
-
     //our database reference object
     DatabaseReference databaseItems;
-
     private static final String TAG = "MainActivity";
 
     @Override
@@ -53,21 +45,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Calling onCreate method");
         setContentView(R.layout.activity_main);
-
         //getting the reference of items node
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
         listViewItems = (ListView) findViewById(R.id.listViewItems);
         //list to store food items
         foodItems = new ArrayList<>();
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("Button Clicked");
                 Log.d(TAG, "Switching to add item activity");
                 switchToAddItem();
-                //startActivityForResult(addItemIntent, ADD_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -90,24 +79,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void showUpdateDeleteDialog(final String itemId, String itemName) {
-
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
         dialogBuilder.setView(dialogView);
-
         final EditText editTextName = (EditText) dialogView.findViewById(R.id.editTextName);
         final Spinner spinnerCategory = (Spinner) dialogView.findViewById(R.id.categories_spinner);
         final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
         final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-
         dialogBuilder.setTitle(itemName);
         final AlertDialog b = dialogBuilder.create();
         b.show();
-
-
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,23 +105,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 deleteItem(itemId);
                 b.dismiss();
             }
         });
     }
-
     private void switchToAddItem() {
         Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
         startActivity(switchToAddItemIntent);
     }
-
     private boolean updateItem(String id, int day, int month, int year, String name, String category) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
@@ -148,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Item Updated", Toast.LENGTH_LONG).show();
         return true;
     }
-
     private boolean deleteItem(String id) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
@@ -167,23 +144,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Calling onDataChange method");
-
                 //Call function to iterate through DB nodes and add items to list
                 List<FoodItem> workingList = loopThroughDBAndAddToList(dataSnapshot);
-
                 if (!(workingList.size() == 0)) {
                     Log.d(TAG, "Working list is not empty");
                 } else {
                     Log.d(TAG, "Working list is empty");
                 }
-
                 //creating adapter
                 FoodItemsList itemAdapter = new FoodItemsList(MainActivity.this, workingList);
                 Log.d(TAG, "Attaching adapter to listViewItems");
                     //attaching adapter to the listview
                     listViewItems.setAdapter(itemAdapter);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -205,42 +178,5 @@ public class MainActivity extends AppCompatActivity {
             foodItems.add(foodItem);
         }
         return foodItems;
-    }
-
-
-    /*
-     * This method is saving a new item to the
-     * Firebase Realtime Database
-     * */
-    private void addItem(String name, int day, int month, int year, String category) {
-        //getting the values to save
-        //String name = editItemName.getText().toString().trim();
-        //int day = picker.getDayOfMonth();
-        //int month = picker.getMonth();
-        //int year = picker.getYear();
-        //String category = spinnerCategory.getSelectedItem().toString();
-
-        //checking if the value is provided
-        //if (!TextUtils.isEmpty(name)) {
-
-            //getting a unique id using push().getKey() method
-            //it will create a unique id and we will use it as the Primary Key for our item
-            String id = databaseItems.push().getKey();
-
-            //creating an item Object
-            FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
-
-            //Saving the item
-            databaseItems.child(id).setValue(foodItem);
-
-            //setting edittext to blank again
-            //editItemName.setText("");
-
-            //displaying a success toast
-            Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
-        //} else {
-            //if the value is not given displaying a toast
-            //Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
-        //}
     }
 }
