@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,6 +26,9 @@ public class AddItemActivity extends AppCompatActivity {
     private FirebaseDatabase foodListDB;
     private DatabaseReference databaseItems;;
     private static final String TAG = "AddItemActivity";
+    EditText editTextName;
+    DatePicker picker;
+    Spinner spinnerCategory;
 
 
     @Override
@@ -32,6 +36,11 @@ public class AddItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         databaseItems = FirebaseDatabase.getInstance().getReference("foodItemsList");
+
+        //getting views
+        editTextName = (EditText) findViewById(R.id.foodName);
+        picker=(DatePicker)findViewById(R.id.datePicker);
+        spinnerCategory = (Spinner) findViewById(R.id.foodType);
 
         /*Spinner spinner = (Spinner) findViewById(R.id.foodType);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -106,8 +115,15 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     public void onDone(View view){
+        String name = editTextName.getText().toString().trim();
+        int day = picker.getDayOfMonth();
+        int month = picker.getMonth();
+        int year = picker.getYear();
+        year -= 1900;
+        String category = spinnerCategory.getSelectedItem().toString();
+        FoodType foodType = assignFoodType(category);
         String id = databaseItems.push().getKey();
-        FoodItem food = new FoodItem(id, new Date(121, 02, 31), "Cheddar Cheese", FoodType.Dairy);
+        FoodItem food = new FoodItem(id, new Date(year, month, day), name, foodType);
         databaseItems.child(id).setValue(food);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -133,5 +149,36 @@ public class AddItemActivity extends AppCompatActivity {
 
 
     public void onRadioButtonClicked(View view) {
+    }
+
+    public FoodType assignFoodType(String string){
+        FoodType t;
+       switch(string){
+           
+           case ("Dairy"):
+               t = FoodType.Dairy;
+               break;
+           case ("Produce"):
+               t = FoodType.Produce;
+               break;
+           case ("Bakery"):
+               t = FoodType.Bakery;
+               break;
+           case ("Meat"):
+               t = FoodType.Meat;
+               break;
+           case ("Custom"):
+               t = FoodType.Custom;
+               break;
+           case ("Canned"):
+               t = FoodType.Dry;
+               break;
+
+           default:
+               throw new IllegalStateException("Unexpected value: " + string);
+       }
+           return t;
+
+       
     }
 }

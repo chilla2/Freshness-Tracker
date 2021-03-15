@@ -128,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
         //END Recycler View Active Code
 
         // Read from the database
+     }
 
 
-    }
 
-    @Override
+     @Override
     protected void onStart() {
         super.onStart();
         //attaching value event listener
