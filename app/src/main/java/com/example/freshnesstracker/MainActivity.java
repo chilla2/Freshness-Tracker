@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.recyclerViewFoodItems.setAdapter(adapter);
         Log.d(TAG, "Now calling layout manager");
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.recyclerViewFoodItems.setLayoutManager(mLayoutManager);
 
         /*NOTE: To update list, use this code onStart (similar to what is present)
@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
                 //clearing the previous items list
                 foodItems.clear();
 
+                //check that inventory foodItems is updated
+                Log.d(TAG, "Size of inventory's food items after clear: " + mainInventory.inventory.size());
+
                 //iterating through all the nodes
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     //getting item
@@ -150,8 +153,21 @@ public class MainActivity extends AppCompatActivity {
                     //adding item to the list
                     foodItems.add(foodItem);
 
+                    Log.d(TAG, "Food item date right after database call: "+foodItem.getFormattedDate());
+
+                    //check what given expiration dates are
+                    //Log.d(TAG, "Expiration date of item :")
+
                 }
+                Log.d(TAG, "Size of inventory's food items after database add in: " + mainInventory.inventory.size());
+
+                Log.d(TAG, "Before sorting list from database");
+                Log.d(TAG, "Expiration date of first item: " + mainInventory.inventory.get(0).getFormattedDate());
+                Log.d(TAG, "Expiration date of second item " + mainInventory.inventory.get(1).getFormattedDate());
                 mainInventory.sortByExpiry();
+                Log.d(TAG, "After sorting list from database");
+                Log.d(TAG, "Expiration date of first item: " + mainInventory.inventory.get(0).getFormattedDate());
+                Log.d(TAG, "Expiration date of second item " + mainInventory.inventory.get(1).getFormattedDate());
                 adapter.notifyDataSetChanged();
 
             }

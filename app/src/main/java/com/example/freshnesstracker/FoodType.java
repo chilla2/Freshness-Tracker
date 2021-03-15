@@ -1,5 +1,5 @@
 package com.example.freshnesstracker;
 
 public enum FoodType {
-    Dairy, Produce, Bakery, Canned, Meat, Custom
+    Dairy, Produce, Bakery, Canned, Meat, Dry, Custom
 }

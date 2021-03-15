@@ -72,6 +72,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         //get number of items in list to set list adapter
 
         if (foodItems != null) {
+            Log.d(TAG, "Item count set: " + (foodItems.size()));
             return foodItems.size();
         }
         else{

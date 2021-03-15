@@ -1,5 +1,7 @@
 package com.example.freshnesstracker;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,6 +11,8 @@ public class FoodItem {
     public String name;
     public FoodType foodType;
     private Boolean isExpired;
+
+    private static final String TAG = "FoodItemClass";
 
     //calendar class to get month/date/year
     private Calendar calendar = Calendar.getInstance();
@@ -23,6 +27,9 @@ public class FoodItem {
         this.name = name;
         this.foodType = foodType;
         calendar.setTime(date);
+
+        Log.d(TAG, "Date given: " + date);
+        Log.d(TAG, "Calendar date set: " + getFormattedDate());
     }
 
 

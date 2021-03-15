@@ -11,4 +11,5 @@
         <item>Custom</item>
     </string-array>
     <string name="expirationDate">mm/dd/yy</string>
+    <string name="foodListEntry">Enter your food item!</string>
 </resources>
