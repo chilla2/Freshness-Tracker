@@ -161,13 +161,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d(TAG, "Size of inventory's food items after database add in: " + mainInventory.inventory.size());
 
-                Log.d(TAG, "Before sorting list from database");
-                Log.d(TAG, "Expiration date of first item: " + mainInventory.inventory.get(0).getFormattedDate());
-                Log.d(TAG, "Expiration date of second item " + mainInventory.inventory.get(1).getFormattedDate());
                 mainInventory.sortByExpiry();
-                Log.d(TAG, "After sorting list from database");
-                Log.d(TAG, "Expiration date of first item: " + mainInventory.inventory.get(0).getFormattedDate());
-                Log.d(TAG, "Expiration date of second item " + mainInventory.inventory.get(1).getFormattedDate());
+
                 adapter.notifyDataSetChanged();
 
             }

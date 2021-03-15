@@ -26,10 +26,10 @@ public class FoodItem {
         this.date = date;
         this.name = name;
         this.foodType = foodType;
-        calendar.setTime(date);
+        //calendar.setTime(date);
 
-        Log.d(TAG, "Date given: " + date);
-        Log.d(TAG, "Calendar date set: " + getFormattedDate());
+        //Log.d(TAG, "Date given: " + date);
+        //Log.d(TAG, "Calendar date set: " + getFormattedDate());
     }
 
 
@@ -50,6 +50,10 @@ public class FoodItem {
     }
 
     public String getFormattedDate() {
+
+        //update the calendar
+        calendar.setTime(this.date);
+
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String month = String.valueOf(calendar.get(Calendar.MONTH));
         String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
