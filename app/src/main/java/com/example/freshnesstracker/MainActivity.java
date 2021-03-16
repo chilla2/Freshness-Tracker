@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //getting the selected item
                  FoodItem foodItem = foodItems.get(i);
+
             }
         });
 
@@ -73,65 +74,64 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 FoodItem foodItem = foodItems.get(i);
-                showUpdateDeleteDialog(foodItem.getItemId(), foodItem.getName());
+                showUpdateDeleteDialog(foodItem);
                 return true;
             }
         });
     }
 
-    private void showUpdateDeleteDialog(final String itemId, String itemName) {
+    //This function provides the update and delete buttons
+    private void showUpdateDeleteDialog(FoodItem foodItem) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
         dialogBuilder.setView(dialogView);
-        final EditText editTextName = (EditText) dialogView.findViewById(R.id.editTextName);
-        final Spinner spinnerCategory = (Spinner) dialogView.findViewById(R.id.categories_spinner);
         final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
         final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-        dialogBuilder.setTitle(itemName);
+
+        dialogBuilder.setTitle(foodItem.getName());
         final AlertDialog b = dialogBuilder.create();
         b.show();
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = editTextName.getText().toString().trim();
-                String category = spinnerCategory.getSelectedItem().toString();
-                int day = picker.getDayOfMonth();
-                int month = picker.getMonth();
-                int year = picker.getYear();
-                if (!TextUtils.isEmpty(name)) {
-                    updateItem(itemId, day, month, year, name, category);
-                    b.dismiss();
-                }
+                switchToEditItem(foodItem);
             }
         });
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteItem(itemId);
+                deleteItem(foodItem.getItemId());
                 b.dismiss();
             }
         });
     }
+
     private void switchToAddItem() {
         Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
         startActivity(switchToAddItemIntent);
     }
-    private boolean updateItem(String id, int day, int month, int year, String name, String category) {
-        //getting the specified item reference
-        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
-        //updating item
-        FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
-        dR.setValue(foodItem);
-        Toast.makeText(getApplicationContext(), "Item Updated", Toast.LENGTH_LONG).show();
-        return true;
+    private void switchToEditItem(FoodItem foodItem) {
+        //creating an intent
+        Intent switchToEditItemIntent = new Intent(this, EditItemActivity.class);
+        //adding item data intent
+        switchToEditItemIntent.putExtra("itemId", foodItem.getItemId());
+        switchToEditItemIntent.putExtra("name", foodItem.getName());
+        switchToEditItemIntent.putExtra("day", foodItem.getDay());
+        switchToEditItemIntent.putExtra("month", foodItem.getMonth());
+        switchToEditItemIntent.putExtra("year", foodItem.getYear());
+        switchToEditItemIntent.putExtra("category", foodItem.getFoodType());
+        //starting the edit activity with intent
+        Log.d(TAG, "Switching to Edit Item Activity");
+        startActivity(switchToEditItemIntent);
     }
+
     private boolean deleteItem(String id) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
         //removing item
         dR.removeValue();
-        Toast.makeText(getApplicationContext(), "Item Deleted", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();
         return true;
     }
 
