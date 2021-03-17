@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class FoodItemAdapter extends RecyclerView.Adapter {
 
@@ -80,5 +81,19 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         }
     }
 
-
+    // Filter Class
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        animalNamesList.clear();
+        if (charText.length() == 0) {
+            animalNamesList.addAll(foodItems);
+        } else {
+            for (FoodItem wp : foodItems) {
+                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    animalNamesList.add(wp);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

@@ -34,14 +34,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     ListManager mainInventory;
     ArrayAdapter<String> arrayAdapter;
+
+    SearchView editSearch;
 
     EditText editTextName;
     //DatePicker picker;
@@ -128,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
         //END Recycler View Active Code
 
         // Read from the database
+
+        //Locate the EditText that's part of the searchView in activity_main.xml
+        editSearch = (SearchView) findViewById(R.id.search);
+        editSearch.setOnQueryTextListener(this);
      }
 
 
@@ -207,5 +214,17 @@ public class MainActivity extends AppCompatActivity {
         //however data is passed:
         //data.clear();
         //adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String text = newText;
+        adapter.filter(text);
+        return false;
     }
 }
