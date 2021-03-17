@@ -54,8 +54,11 @@ public class FoodItem {
         //update the calendar
         calendar.setTime(this.date);
 
+        Log.d(TAG, "Raw date: " + this.date);
+
+        //note: must add 1 to date since 0 is the starting month for the Date class
         String year = String.valueOf(calendar.get(Calendar.YEAR));
-        String month = String.valueOf(calendar.get(Calendar.MONTH));
+        String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
         String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 
         String formattedDate = month + "/" + day + "/" + year;
