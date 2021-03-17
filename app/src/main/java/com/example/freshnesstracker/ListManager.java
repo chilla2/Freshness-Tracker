@@ -15,13 +15,7 @@ public class ListManager {
         this.inventory = inventory;
     }
 
-    private void saveItem(FoodType foodItem) {
-        //April: I added this to the AddItemActivity
-    }
-
-
-
-    public void sortByExpiry(){
+       public void sortByExpiry(){
 
         Comparator<FoodItem> dateComparator = new Comparator<FoodItem>() {
             @Override
@@ -37,7 +31,7 @@ public class ListManager {
     // Process: Sort Inventory by date. Create new ArrayList of FoodItems
     // Iterate through inventory and add the items of specified type.
     // Check to see if the array is empty before returning results.
-    public ArrayList<FoodItem> searchByType(FoodType foodType){
+    /*public ArrayList<FoodItem> searchByType(FoodType foodType){
 
         ArrayList<FoodItem>  listByType = new ArrayList<>();
         for(FoodItem i : inventory){
@@ -53,7 +47,7 @@ public class ListManager {
             return listByType;
         }
     }
-
+*/
     // Process: Create new ArrayList to hold search results.
     // Check if name contains the search parameter (not case sensitive.)
     // If true add to new Arraylist.
@@ -76,14 +70,12 @@ public class ListManager {
             return listByName;
         }
     }
-    public void insertFoodItem(FoodItem foodItem){
-        // add FoodItem to inventory and sort (and save to file?)
-    }
-    public List<String> makeDisplayStringArray(){
+
+    /*public List<String> makeDisplayStringArray(){
         // make a list for displaying info in Listview
         List<String> viewList = new ArrayList<>();
 
-        //given filters as an arguement? Return string array
+        //given filters as an argument? Return string array
 
         //add all items to list
         for (int i = 0; i < inventory.size(); i++) {
@@ -93,5 +85,5 @@ public class ListManager {
         }
 
         return viewList;
-    }
+    }*/
 }

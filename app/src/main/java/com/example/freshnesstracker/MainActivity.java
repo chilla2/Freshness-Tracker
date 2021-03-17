@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,10 +12,13 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,21 +43,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
     ListManager mainInventory;
     ArrayAdapter<String> arrayAdapter;
 
     EditText editTextName;
-    //DatePicker picker;
-    //Spinner spinnerCategory;
     ListView listViewItems;
     //Button buttonAddItem;
-
 
     //our database reference object
     DatabaseReference databaseItems;
     ArrayList<FoodItem> foodItems;
-
 
     //RecyclerView Declarations
     RecyclerView recyclerViewFoodItems;
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Now setting up adapter");
 
         //changed to mainInventory **adapter = new FoodItemAdapter(fakeInventory.inventory);
-        adapter = new FoodItemAdapter(mainInventory.inventory);
+        adapter = new FoodItemAdapter(mainInventory.inventory, this);
 
         this.recyclerViewFoodItems.setAdapter(adapter);
         Log.d(TAG, "Now calling layout manager");
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         //END Recycler View Active Code
 
         // Read from the database
+
      }
 
 
@@ -208,4 +209,67 @@ public class MainActivity extends AppCompatActivity {
         //data.clear();
         //adapter.notifyDataSetChanged();
     }
+
+
+    @Override
+    public void onListItemClick(int position) {
+        FoodItem foodItem = foodItems.get(position);
+        Log.d("Click", foodItem.getName());
+        showUpdateDeleteDialog(foodItem);
+
+    }
+    private void showUpdateDeleteDialog(FoodItem foodItem) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
+        dialogBuilder.setView(dialogView);
+        final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
+        final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
+
+        dialogBuilder.setTitle(foodItem.getName());
+        final AlertDialog b = dialogBuilder.create();
+        b.show();
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchToEditItem(foodItem);
+            }
+        });
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteItem(foodItem.getId());
+                b.dismiss();
+            }
+        });
+    }
+    private boolean deleteItem(String id) {
+        //getting the specified item reference
+        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("foodItemsList").child(id);
+        //removing item
+        dR.removeValue();
+        Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();
+        return true;
+    }
+    private void switchToEditItem(FoodItem foodItem) {
+        //creating an intent
+        Intent switchToEditItemIntent = new Intent(this, EditItemActivity.class);
+        //adding item data intent
+        int d = foodItem.getDate().getDay();
+        int m = foodItem.getDate().getMonth();
+        int y = foodItem.getDate().getYear();
+        Log.d("date", foodItem.getFormattedDate());
+        Log.d("date","day:"+d +" month:" + m + " year:" + y);
+
+        switchToEditItemIntent.putExtra("itemId", foodItem.getId());
+        switchToEditItemIntent.putExtra("name", foodItem.getName());
+        switchToEditItemIntent.putExtra("day", foodItem.getDate().getDay());
+        switchToEditItemIntent.putExtra("month", foodItem.getDate().getMonth());
+        switchToEditItemIntent.putExtra("year", foodItem.getDate().getYear());
+        switchToEditItemIntent.putExtra("category", foodItem.getFoodType());
+        //starting the edit activity with intent
+        Log.d(TAG, "Switching to Edit Item Activity");
+        startActivity(switchToEditItemIntent);
+    }
+
 }

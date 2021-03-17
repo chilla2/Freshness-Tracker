@@ -10,7 +10,7 @@ public class BuildFakeInventory {
 
 
     public static ArrayList<FoodItem> buildFakeInventory() {
-        // make a list of food types
+       /* // make a list of food types
         ArrayList<FoodType> typeList = new ArrayList<>();
         typeList.add(FoodType.Bakery);
         typeList.add(FoodType.Dairy);
@@ -35,13 +35,13 @@ public class BuildFakeInventory {
         dateDates.add(new Date(121, 11, 18));
         dateDates.add(new Date(121, 2, 15));
         dateDates.add(new Date(123, 2, 18));
-
+*/
         // Create the FoodItems and add to the fakeInventory.
         ArrayList<FoodItem> fakeInventory = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            FoodItem p = new FoodItem("123", dateDates.get(i), nameList.get(i), typeList.get(i));
+        //for (int i = 0; i < 5; i++) {
+            FoodItem p = new FoodItem("123", 15, 3, 2022, "milk", "Dairy");
             fakeInventory.add(p);
-        }
+
         return fakeInventory;
     }
 }

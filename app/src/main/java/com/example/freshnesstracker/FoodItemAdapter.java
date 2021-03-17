@@ -3,6 +3,7 @@ package com.example.freshnesstracker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -16,9 +17,14 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     private static final String TAG = "FoodItemAdapter";
 
     private ArrayList<FoodItem> foodItems;
+    public final ListItemClickListener mOnClickListener;
+
+    interface ListItemClickListener{
+        void onListItemClick(int position);
+    }
 
     //static class for ViewHolder---used so it is in same namespace
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         public final View view;
         public final TextView name;
         public final TextView expirationDate;
@@ -34,15 +40,25 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public ViewHolder(View view) {
             super(view);
             this.view = view;
+            itemView.setOnClickListener(this);
             name = view.findViewById(R.id.name);
             expirationDate = view.findViewById(R.id.adapaterExpirDate);
             Log.d(TAG, "Constructor of ViewHolder called");
         }
+
+        @Override
+        public void onClick(View v) {
+         int pos = getAdapterPosition();
+         mOnClickListener.onListItemClick(pos);
+
+
+        }
     }
 
     //constructor
-    public FoodItemAdapter(ArrayList<FoodItem> foodItems) {
+    public FoodItemAdapter(ArrayList<FoodItem> foodItems, ListItemClickListener click) {
         this.foodItems = foodItems;
+        this.mOnClickListener = click;
     }
 
     @NonNull
