@@ -16,7 +16,7 @@
         android:layout_marginLeft="8dp"
         android:text="@string/foodListEntry"
         android:textColor="#18E420"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/textViewSpacer"
@@ -36,5 +36,5 @@
         android:layout_marginRight="8dp"
         android:text="@string/expirationDate"
         android:textColor="#000000"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 </LinearLayout>
