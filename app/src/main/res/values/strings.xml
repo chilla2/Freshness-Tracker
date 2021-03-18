@@ -12,4 +12,8 @@
     </string-array>
     <string name="expirationDate">mm/dd/yy</string>
     <string name="foodListEntry">Enter your food item!</string>
+    <string name="food_name">Food Name</string>
+    <string name="update">Update</string>
+    <string name="choose_food_type">Choose food type:</string>
+    <string name="new_item">New Item</string>
 </resources>

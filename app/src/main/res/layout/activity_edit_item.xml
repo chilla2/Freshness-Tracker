@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditItemActivity">
+    tools:context=".AddItemActivity">
 
     <EditText
         android:id="@+id/foodName"
@@ -14,79 +14,24 @@
         android:layout_marginLeft="80dp"
         android:layout_marginTop="12dp"
         android:ems="11"
-        android:hint="Food Name"
+        android:hint="@string/food_name"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menuTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/menuTitle"
+        android:autofillHints="" />
 
-    <EditText
-        android:id="@+id/ExpirationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
-        android:ems="5"
-        app:layout_constraintStart_toEndOf="@+id/radioGroup"
-        app:layout_constraintTop_toBottomOf="@+id/foodType" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foodType">
-
-        <RadioButton
-            android:id="@+id/radioExpiration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
-            android:text="Expiration Date: " />
-
-        <RadioButton
-            android:id="@+id/radioUseBy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
-            android:text="Use within: " />
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/useByText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:ems="5"
-        app:layout_constraintStart_toEndOf="@+id/radioGroup"
-        app:layout_constraintTop_toBottomOf="@+id/ExpirationText" />
 
     <Button
-        android:id="@+id/submitItem"
+        android:id="@+id/saveItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="412dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:text="Done"
+        android:layout_marginTop="356dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginRight="76dp"
+        android:text="@string/update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/useByLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="340dp"
-        android:inputType="none"
-        android:text="days"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/useByText"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/menuTitle"
@@ -94,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="32dp"
         android:inputType="none"
-        android:text="New Item"
-        android:textSize="25dp"
+        android:text="@string/new_item"
         android:textColor="@color/black"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,10 +54,9 @@
         android:layout_marginStart="84dp"
         android:layout_marginLeft="84dp"
         android:layout_marginTop="20dp"
-        android:text="Choose food type: "
         android:inputType="none"
+        android:text="@string/choose_food_type"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/foodType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/foodName" />
 
@@ -120,13 +64,36 @@
         android:id="@+id/foodType"
         android:layout_width="114dp"
         android:layout_height="19dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="84dp"
         android:layout_marginRight="84dp"
+        android:entries="@array/foodTypeList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/foodTypeLabel"
         app:layout_constraintTop_toBottomOf="@+id/foodName" />
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="258dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="77dp"
+        android:layout_marginRight="77dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/foodTypeLabel" />
+
+    <!--<RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="283dp"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,8 +9,11 @@ public class FoodItem {
     public String id;
     public Date date;
     public String name;
-    public FoodType foodType;
+    public String foodType;
     private Boolean isExpired;
+    public int day;
+    public int month;
+    public int year;
 
     private static final String TAG = "FoodItemClass";
 
@@ -21,11 +24,14 @@ public class FoodItem {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public FoodItem(String id, Date date, String name, FoodType foodType) {
+    public FoodItem(String id, int year, int month, int day, String name, String foodType) {
         this.id = id;
-        this.date = date;
+        this.date = new Date(year, month, day);
         this.name = name;
         this.foodType = foodType;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         //calendar.setTime(date);
 
         //Log.d(TAG, "Date given: " + date);
@@ -37,12 +43,17 @@ public class FoodItem {
     public void setDate(Date aDate){ this.date = aDate;}
 
 
-    public FoodType getFoodType(){return foodType;}
-    public void setFoodType(FoodType aFoodType){this.foodType = aFoodType;}
+    public String getFoodType(){return foodType;}
+    public void setFoodType(String aFoodType){this.foodType = aFoodType;}
 
 
     public String getName(){return name;}
     public void setName(String aName){this.name = aName;}
+
+    public String getId(){return id;}
+    public int getDay(){return day;}
+    public int getMonth(){return month;}
+    public int getYear(){return year;}
 
     // save food item to database...
     public void saveFoodItem(){
@@ -66,3 +77,5 @@ public class FoodItem {
     }
 
 }
+
+

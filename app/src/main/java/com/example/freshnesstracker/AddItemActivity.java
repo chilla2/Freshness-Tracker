@@ -39,7 +39,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         //getting views
         editTextName = (EditText) findViewById(R.id.foodName);
-        picker=(DatePicker)findViewById(R.id.datePicker);
+        picker = (DatePicker) findViewById(R.id.datePicker);
         spinnerCategory = (Spinner) findViewById(R.id.foodType);
 
         /*Spinner spinner = (Spinner) findViewById(R.id.foodType);
@@ -55,63 +55,6 @@ public class AddItemActivity extends AppCompatActivity {
         //foodListDB = FirebaseDatabase.getInstance();
 
 
-
-
-
-       /* ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-
-                // A new item has been added, add it to the displayed list
-                FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
-
-                // ...
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so displayed the changed item.
-                FoodItem newItem = dataSnapshot.getValue(FoodItem.class);
-                String itemKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so remove it.
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-                // FoodItem movedComment = dataSnapshot.getValue(Comment.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-            }
-        };*/
-       // foodListDBReference.addChildEventListener(childEventListener);
-
-
     }
 
     public void onDone(View view){
@@ -121,37 +64,17 @@ public class AddItemActivity extends AppCompatActivity {
         int year = picker.getYear();
         year -= 1900;
         String category = spinnerCategory.getSelectedItem().toString();
-        FoodType foodType = assignFoodType(category);
+        //FoodType foodType = assignFoodType(category);
         String id = databaseItems.push().getKey();
-        FoodItem food = new FoodItem(id, new Date(year, month, day), name, foodType);
+        FoodItem food = new FoodItem(id, year, month, day, name, category);
         databaseItems.child(id).setValue(food);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 
 
     }
-    /*
-    private FoodItem getNewItemData() {
-        This should take input from user and create food item to be passed into the save method
-    }
-    */
 
-
-
-
-    //Later, this method can just take a FoodItem as a parameter
-    public void saveItem(Date date, String name, FoodType foodType) {
-
-    }
-    /*public void onSaveFoodItem(View view){
-        FoodItem foodItem1 = new FoodItem( new Date(121, 2, 11), "yogurt", FoodType.Dairy);
-    }*/
-
-
-    public void onRadioButtonClicked(View view) {
-    }
-
-    public FoodType assignFoodType(String string){
+   /* public FoodType assignFoodType(String string){
         FoodType t;
        switch(string){
            
@@ -180,5 +103,5 @@ public class AddItemActivity extends AppCompatActivity {
            return t;
 
        
-    }
+    }*/
 }
