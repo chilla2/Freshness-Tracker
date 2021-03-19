@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Customized RecycleView.Adapter for generating and displaying FoodItem class information in RecyclerView object
+ */
 public class FoodItemAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = "FoodItemAdapter";
@@ -24,6 +27,10 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     }
 
     //static class for ViewHolder---used so it is in same namespace
+
+    /**
+     * Static class that customizes the viewHolder for FoodItemAdapter
+     */
     public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         public final View view;
         public final TextView name;
@@ -37,6 +44,10 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
             return expirationDate;
         }
 
+        /**
+         *Constructor to set the display/view of the FoodItem information
+         * @param view
+         */
         public ViewHolder(View view) {
             super(view);
             this.view = view;
@@ -55,7 +66,12 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         }
     }
 
-    //constructor
+    /**
+     * Constructor for FoodItemAdapter
+     *
+     * @param foodItems
+     * @param click
+     */
     public FoodItemAdapter(ArrayList<FoodItem> foodItems, ListItemClickListener click) {
         this.foodItems = foodItems;
         this.mOnClickListener = click;
