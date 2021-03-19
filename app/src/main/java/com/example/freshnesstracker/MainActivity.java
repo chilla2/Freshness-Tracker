@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         startActivity(intent);
     }
 
-    //will clear current reyclcer view of objects and re-display them; call after list updates
+    //will clear current recycler view of objects and re-display them; call after list updates
     public void resetRecyclerView() {
         //however data is passed:
         //data.clear();
@@ -222,9 +222,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        String text = newText;
-        adapter.filter(text);
+    public boolean onQueryTextChange(String newQuery) {
+        adapter.filter(newQuery);
         return false;
     }
 }

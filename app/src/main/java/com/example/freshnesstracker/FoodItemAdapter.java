@@ -17,6 +17,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     private static final String TAG = "FoodItemAdapter";
 
     private ArrayList<FoodItem> foodItems;
+    private ArrayList<FoodItem> foodItemsCopy;
 
     //static class for ViewHolder---used so it is in same namespace
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,6 +45,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     //constructor
     public FoodItemAdapter(ArrayList<FoodItem> foodItems) {
         this.foodItems = foodItems;
+        foodItemsCopy.addAll(foodItems);
     }
 
     @NonNull
@@ -82,15 +84,15 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     }
 
     // Filter Class
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        animalNamesList.clear();
-        if (charText.length() == 0) {
-            animalNamesList.addAll(foodItems);
+    public void filter(String query) {
+        query = query.toLowerCase(Locale.getDefault());
+        foodItemsCopy.clear();
+        if (query.length() == 0) {
+            foodItemsCopy.addAll(foodItems);
         } else {
-            for (FoodItem wp : foodItems) {
-                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    animalNamesList.add(wp);
+            for (FoodItem foodItemFilter : foodItems) {
+                if (foodItemFilter.getName().toLowerCase(Locale.getDefault()).contains(query)) {
+                    foodItemsCopy.add(foodItemFilter);
                 }
             }
         }
