@@ -4,6 +4,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class FoodItemAdapter extends RecyclerView.Adapter {
+public class FoodItemAdapter extends RecyclerView.Adapter implements Filterable {
 
     private static final String TAG = "FoodItemAdapter";
 
     private ArrayList<FoodItem> foodItems;
-    private ArrayList<FoodItem> foodItemsCopy;
+    protected ArrayList<FoodItem> foodItemsCopy;
 
     //static class for ViewHolder---used so it is in same namespace
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,7 +47,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     //constructor
     public FoodItemAdapter(ArrayList<FoodItem> foodItems) {
         this.foodItems = foodItems;
-        foodItemsCopy.addAll(foodItems);
+        this.foodItemsCopy.addAll(foodItems);
     }
 
     @NonNull
@@ -83,19 +85,55 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         }
     }
 
-    // Filter Class
-    public void filter(String query) {
-        query = query.toLowerCase(Locale.getDefault());
-        foodItemsCopy.clear();
-        if (query.length() == 0) {
-            foodItemsCopy.addAll(foodItems);
-        } else {
-            for (FoodItem foodItemFilter : foodItems) {
-                if (foodItemFilter.getName().toLowerCase(Locale.getDefault()).contains(query)) {
-                    foodItemsCopy.add(foodItemFilter);
+//    // Filter Class
+//    public void filter(String query) {
+//        query = query.toLowerCase(Locale.getDefault());
+//        foodItems.clear();
+//        if (query.length() == 0) {
+//            foodItems.addAll(foodItemsCopy);
+//        } else {
+//            for (FoodItem foodItemFilter : foodItemsCopy) {
+//                if (foodItemFilter.getName().toLowerCase(Locale.getDefault()).contains(query)) {
+//                    foodItems.add(foodItemFilter);
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//    }
+
+    public Filter getFilter()
+    {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<FoodItem> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(foodItemsCopy);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (FoodItem item : foodItemsCopy) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
                 }
             }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
         }
-        notifyDataSetChanged();
-    }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults results) {
+            foodItems.clear();
+            foodItems.addAll((ArrayList)results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

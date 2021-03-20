@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     //RecyclerView Declarations
     RecyclerView recyclerViewFoodItems;
-    RecyclerView.Adapter adapter;
+//    RecyclerView.Adapter adapter;
+    private FoodItemAdapter adapter;
 
     private static final String TAG = "MainActivity";
 
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextChange(String newQuery) {
-        adapter.filter(newQuery);
+        adapter.getFilter().filter(newQuery);
         return false;
     }
 }
