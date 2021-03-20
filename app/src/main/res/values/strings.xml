@@ -3,10 +3,11 @@
     <string name="app_label">Freshness Tracker</string>
     <string name="search_hint">Search for Food Item</string>
     <string-array name="foodTypeList">
+        <item>Bakery</item>
         <item>Dairy</item>
+        <item>Dry Goods</item>
         <item>Meat</item>
         <item>Produce</item>
-        <item>Baked</item>
         <item>Canned</item>
         <item>Custom</item>
     </string-array>
@@ -16,4 +17,16 @@
     <string name="update">Update</string>
     <string name="choose_food_type">Choose food type:</string>
     <string name="new_item">New Item</string>
+    <string name="all_items">All Items</string>
+    <string name="ok">OK</string>
+    <string-array name="sortTypeList">
+        <item>All</item>
+        <item>Bakery</item>
+        <item>Dairy</item>
+        <item>Dry Goods</item>
+        <item>Meat</item>
+        <item>Produce</item>
+        <item>Canned</item>
+        <item>Custom</item>
+    </string-array>
 </resources>

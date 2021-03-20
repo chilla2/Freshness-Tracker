@@ -5,6 +5,11 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Food Item class holds  a unique id for the food, the Name of the food, the category
+ * of the food and the expiration date or use by date of the food.
+ */
+
 public class FoodItem {
     public String id;
     public Date date;
@@ -59,6 +64,10 @@ public class FoodItem {
     public void saveFoodItem(){
 
     }
+
+    /**
+     * GetFormattedDate returns a the expiration date as a string.
+     */
 
     public String getFormattedDate() {
 

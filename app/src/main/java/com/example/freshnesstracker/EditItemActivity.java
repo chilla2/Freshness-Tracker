@@ -25,6 +25,7 @@ public class EditItemActivity extends AppCompatActivity {
     Spinner spinnerCategory;
     Button saveItem;
     DatabaseReference databaseItem;
+    String updateId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class EditItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         //get the attached extras from the intent
-        String itemId = intent.getStringExtra("itemId");
+        updateId = intent.getStringExtra("itemId");
         String name = intent.getStringExtra("name");
         int day = intent.getIntExtra("day", 1);
         int month = intent.getIntExtra("month", 1);
@@ -42,7 +43,7 @@ public class EditItemActivity extends AppCompatActivity {
 
 
         //get reference for specific item using the ID
-        databaseItem = FirebaseDatabase.getInstance().getReference("foodItems").child(itemId);
+        databaseItem = FirebaseDatabase.getInstance().getReference("foodItemsList").child(updateId);
         //DataSnapshot postSnapshot = dataSnapshot.getChildren();
         //FoodItem foodItem = databaseItem.getValue(FoodItem.class);
         editTextName = (EditText) findViewById(R.id.foodName);
@@ -69,6 +70,9 @@ public class EditItemActivity extends AppCompatActivity {
                 int day = picker.getDayOfMonth();
                 int month = picker.getMonth();
                 int year = picker.getYear();
+                FoodItem food = new FoodItem(updateId, year, month, day, name, category);
+                databaseItem.setValue(food);
+
                 //FoodType foodType = assignFoodType(category);
 
                 //Can't access itemId or intent from here, so must use getIntent and getExtra again in order to retrieve itemId to be passed into updateItem

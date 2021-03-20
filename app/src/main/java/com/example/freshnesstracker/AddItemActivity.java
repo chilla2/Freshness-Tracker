@@ -24,8 +24,9 @@ import android.widget.Spinner;
 public class AddItemActivity extends AppCompatActivity {
 
     private FirebaseDatabase foodListDB;
-    private DatabaseReference databaseItems;;
+    private DatabaseReference databaseItems;
     private static final String TAG = "AddItemActivity";
+    final public static String PATH = "foodItemsList";
     EditText editTextName;
     DatePicker picker;
     Spinner spinnerCategory;
@@ -35,26 +36,12 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        databaseItems = FirebaseDatabase.getInstance().getReference("foodItemsList");
+        databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
 
         //getting views
-        editTextName = (EditText) findViewById(R.id.foodName);
-        picker = (DatePicker) findViewById(R.id.datePicker);
-        spinnerCategory = (Spinner) findViewById(R.id.foodType);
-
-        /*Spinner spinner = (Spinner) findViewById(R.id.foodType);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.foodTypeList, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-*/
-
-        //foodListDB = FirebaseDatabase.getInstance();
-
-
+        editTextName = findViewById(R.id.foodName);
+        picker =  findViewById(R.id.datePicker);
+        spinnerCategory =  findViewById(R.id.foodType);
     }
 
     public void onDone(View view){
