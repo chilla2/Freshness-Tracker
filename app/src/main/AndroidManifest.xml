@@ -10,12 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FreshnessTracker">
         android:usesCleartextTraffic="true" >
-        <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".EditItemActivity" />
+            android:name=".EditItemActivity"
+            android:label="Edit Item"/>/>
         <activity
             android:name=".AddItemActivity"
             android:label="Add Item"
             android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".EditItemActivity"
+            android:label="Edit Item"
+            android:windowSoftInputMode="adjustNothing" />
+
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" >
             <intent-filter>
@@ -23,6 +28,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".SearchActivity"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
     </application>
 

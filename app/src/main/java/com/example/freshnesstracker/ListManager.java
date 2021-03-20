@@ -1,63 +1,59 @@
+
 package com.example.freshnesstracker;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
-public class ListManager {
-    ArrayList<FoodItem> inventory;
-
-    public ListManager(ArrayList<FoodItem> inventory) {
-        this.inventory = inventory;
-    }
-
-    private void saveItem(FoodType foodItem) {
-        //April: I added this to the AddItemActivity
-    }
-
-
-/*
-    private void sortByExpiry(ArrayList<FoodItem> foodList){
-
-        Comparator<FoodItem> dateComparator = new Comparator<FoodItem>() {
-            @Override
-            public int compare(FoodItem o1, FoodItem o2) {
-                return o1.date.compareTo(o2.date);
-            }
-        };
-
-        Collections.sort(inventory, dateComparator);
-    }
-
+/** The list manager takes the list that is generated from the database data and sorts it by whatever criteria is passed in
+ *
  */
 
-    public ArrayList<FoodItem> searchByType(FoodType  foodType){
-        // function will create a new list(new ListManager?) with only specified type and then sort it by date
-       /* sortByExpiry();
+public class ListManager {
+    ArrayList<FoodItem> foodItems;
+    ArrayList<FoodItem> workingList;
+    static private final String TAG = "ListManager";
 
-        ArrayList<FoodItem>  listByType = new ArrayList<>();
-        for(FoodItem i : inventory){
-            if (i.getFoodType() == foodType){
-                listByType.add(i);
+    public ListManager(ArrayList<FoodItem> foodItems) {
+        this.foodItems = foodItems;
+        workingList = new ArrayList<>(foodItems);
+    }
+
+    public void sortByExpiry(){
+        if (workingList != null) {
+            Comparator<FoodItem> dateComparator = (o1, o2) -> {
+                Date date1 = new Date(o1.year, o1.month, o1.day);
+                Date date2 = new Date(o2.year, o2.month, o2.day);
+                return date1.compareTo(date2);
+            };
+            Collections.sort(workingList, dateComparator);
+        }
+    }
+
+
+    // Process: Create new ArrayList to hold search results.
+    // Check if name contains the search parameter (not case sensitive.)
+    // If true add to new Arraylist.
+    // Check to see if the array is empty before returning results.
+    public ArrayList<FoodItem> searchByName(String searchName) {
+        ArrayList<FoodItem> listByName = new ArrayList<>();
+        searchName = searchName.toLowerCase();
+        for (FoodItem i : foodItems) {
+            String lowName = i.getName().toLowerCase();
+            if (lowName.contains(searchName)) {
+                listByName.add(i);
             }
         }
-        return listByType;*/
-
-        return null;
-    }
-
-    public ArrayList<FoodItem> searchByName(String  name){
-        //function will create a new list(new ListManager?) with only specified name and then sort it by date
-        return null;
-    }
-    public void insertFoodItem(FoodItem foodItem){
-        // add FoodItem to inventory and sort
-    }
-    public ArrayList<String> makeDisplayStringArray(){
-        // make a list for displaying info in Listview
-        return null;
+        if (listByName.size() < 1) {
+            //return error message and stay on search activity.
+            return null;
+        } else {
+            return listByName;
+        }
     }
 }

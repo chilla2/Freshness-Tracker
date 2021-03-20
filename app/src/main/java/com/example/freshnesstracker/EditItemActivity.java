@@ -40,9 +40,9 @@ public class EditItemActivity extends AppCompatActivity {
         //get the attached extras from the intent
         String itemId  = intent.getStringExtra("itemId");
         String name = intent.getStringExtra("name");
-        Integer day = intent.getIntExtra("day", 1);
-        Integer month = intent.getIntExtra("month", 1);
-        Integer year = intent.getIntExtra("year", 2022);
+        int day = intent.getIntExtra("day", 1);
+        int month = intent.getIntExtra("month", 1);
+        int year = intent.getIntExtra("year", 2022);
         String category = intent.getStringExtra("category");
 
         //get reference for specific item using the ID

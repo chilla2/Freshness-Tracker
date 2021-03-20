@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +33,22 @@ import java.util.Date;
 import java.util.List;
 import android.widget.DatePicker;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Main Activity displays list of food items and their expiration dates from realtime database -
+ * Add button in button in bottom right corner switches view to add item screen -
+ * Long press on item brings up dialog with buttons to add or delete item -
+ */
 
+public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
     DatePicker picker;
-    ListView listViewItems;
+    ListManager listManager;
+    ArrayAdapter<String> arrayAdapter;
     //a list to store all the artist from firebase database
-    List<FoodItem> foodItems;
+    ArrayList<FoodItem> foodItems;
+   // List<FoodItem> foodItems;
+    //RecyclerView Declarations
+    RecyclerView recyclerViewFoodItems;
+    RecyclerView.Adapter adapter;
     FloatingActionButton addButton;
     //our database reference object
     DatabaseReference databaseItems;
@@ -45,12 +59,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Calling onCreate method");
         setContentView(R.layout.activity_main);
+
         //getting the reference of items node
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
+        //listViewItems = (ListView) findViewById(R.id.listViewItems);
+        foodItems = new ArrayList<>(); //list to store food items
+        listManager = new ListManager(foodItems);
+        adapter = new FoodItemAdapter(listManager.workingList, this);
+
+        //listManager.sortByExpiry(); - you can't sort an empty list
+        recyclerViewFoodItems = (RecyclerView) findViewById(R.id.recyclerView2);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerViewFoodItems.setLayoutManager(mLayoutManager);
+        this.recyclerViewFoodItems.setAdapter(adapter);
+
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
-        listViewItems = (ListView) findViewById(R.id.listViewItems);
-        //list to store food items
-        foodItems = new ArrayList<>();
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,27 +83,50 @@ public class MainActivity extends AppCompatActivity {
                 switchToAddItem();
             }
         });
+    }
 
-        //attaching listener to listview
-        listViewItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "Calling onStart method");
+        //attaching value event listener
+        databaseItems.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //getting the selected item
-                 FoodItem foodItem = foodItems.get(i);
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Calling onDataChange method");
+                //Call function to iterate through DB nodes and add items to list
+                foodItems = loopThroughDBAndAddToList(dataSnapshot);
+                if (!(foodItems.size() == 0)) {
+                    Log.d(TAG, "List is not empty");
+                    //listManager = new ListManager(foodItems);
+                    //listManager.sortByExpiry();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "List is empty");
+                }
             }
-        });
-
-        listViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FoodItem foodItem = foodItems.get(i);
-                showUpdateDeleteDialog(foodItem);
-                return true;
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
 
+    @Override
+    public void onListItemClick(int position) {
+        FoodItem foodItem = foodItems.get(position);
+        Log.d("Click", foodItem.getName());
+        showUpdateDeleteDialog(foodItem);
+    }
+
+    public void onSort(View view) {
+
+    }
+
+    public void onSearch(View view){
+
+    }
+
+    /** showUpdateDeleteDialog is called on long press of an item in the list. The dialog provides the update and delete buttons. */
     //This function provides the update and delete buttons
     private void showUpdateDeleteDialog(FoodItem foodItem) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -88,10 +135,9 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setView(dialogView);
         final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
         final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-
         dialogBuilder.setTitle(foodItem.getName());
-        final AlertDialog b = dialogBuilder.create();
-        b.show();
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,11 +148,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteItem(foodItem.getItemId());
-                b.dismiss();
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
         });
     }
 
+    /** switchToAddItem method changes activities to the Add Item. This is called when the add button is clicked */
     private void switchToAddItem() {
         Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
         startActivity(switchToAddItemIntent);
@@ -135,36 +183,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "Calling onStart method");
-        //attaching value event listener
-        databaseItems.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Calling onDataChange method");
-                //Call function to iterate through DB nodes and add items to list
-                List<FoodItem> workingList = loopThroughDBAndAddToList(dataSnapshot);
-                if (!(workingList.size() == 0)) {
-                    Log.d(TAG, "Working list is not empty");
-                } else {
-                    Log.d(TAG, "Working list is empty");
-                }
-                //creating adapter
-                FoodItemsList itemAdapter = new FoodItemsList(MainActivity.this, workingList);
-                Log.d(TAG, "Attaching adapter to listViewItems");
-                    //attaching adapter to the listview
-                    listViewItems.setAdapter(itemAdapter);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
     //This method is called in the onDataChange method (in onStart)
-    public List<FoodItem> loopThroughDBAndAddToList(DataSnapshot dataSnapshot) {
+    public ArrayList<FoodItem> loopThroughDBAndAddToList(DataSnapshot dataSnapshot) {
         Log.d(TAG, "Running method - loopThroughDBAndAddToList");
         Log.d(TAG, "Clearing list");
         foodItems.clear();

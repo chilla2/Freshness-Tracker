@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Freshness Tracker</string>
+    <string name="app_label">Freshness Tracker</string>
+    <string name="search_hint">Search for Food Item</string>
 <string-array name="categories_array">
     <item>Dairy</item>
     <item>Bakery</item>
@@ -9,4 +11,10 @@
     <item>Dry Good</item>
     <item>Custom</item>
 </string-array>
+    <string name="expirationDate">mm/dd/yy</string>
+    <string name="foodListEntry">Enter your food item!</string>
+    <string name="food_name">Food Name</string>
+    <string name="update">Update</string>
+    <string name="choose_food_type">Choose food type:</string>
+    <string name="new_item">New Item</string>
 </resources>
