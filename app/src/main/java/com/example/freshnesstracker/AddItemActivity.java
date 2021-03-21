@@ -54,10 +54,6 @@ public class AddItemActivity extends AppCompatActivity {
         startActivity(switchToMainIntent);
     }
 
-    /*
-     * This method is saving a new item to the
-     * Firebase Realtime Database
-     * */
     private void addItem() {
         //getting the values to save
         String name = editTextName.getText().toString().trim();

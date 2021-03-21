@@ -1,21 +1,16 @@
 package com.example.freshnesstracker;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.content.Context;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,9 +24,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
-import android.widget.DatePicker;
+
+import static androidx.recyclerview.widget.RecyclerView.*;
 
 /**
  * Main Activity displays list of food items and their expiration dates from realtime database -
@@ -40,18 +37,19 @@ import android.widget.DatePicker;
  */
 
 public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
-    DatePicker picker;
-    ListManager listManager;
-    ArrayAdapter<String> arrayAdapter;
-    //a list to store all the artist from firebase database
-    ArrayList<FoodItem> foodItems;
-   // List<FoodItem> foodItems;
-    //RecyclerView Declarations
-    RecyclerView recyclerViewFoodItems;
-    RecyclerView.Adapter adapter;
+
+    private Spinner mSpinner;
     FloatingActionButton addButton;
-    //our database reference object
+
+    //creating one list to contain all items and remains unchanged except when DB is updated, and one list that will be updated depending on needs of view.
+    ArrayList<FoodItem> foodItems;
+    ArrayList<FoodItem> displayList;
+
+    RecyclerView recyclerViewFoodItems;
+    FoodItemAdapter adapter;
+
     DatabaseReference databaseItems;
+
     private static final String TAG = "MainActivity";
 
     @Override
@@ -60,20 +58,21 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         Log.d(TAG, "Calling onCreate method");
         setContentView(R.layout.activity_main);
 
-        //getting the reference of items node
-        databaseItems = FirebaseDatabase.getInstance().getReference("items");
-        //listViewItems = (ListView) findViewById(R.id.listViewItems);
-        foodItems = new ArrayList<>(); //list to store food items
-        listManager = new ListManager(foodItems);
-        adapter = new FoodItemAdapter(listManager.workingList, this);
+        addButton = findViewById(R.id.addButton);
+        mSpinner = findViewById(R.id.foodType);
 
-        //listManager.sortByExpiry(); - you can't sort an empty list
-        recyclerViewFoodItems = (RecyclerView) findViewById(R.id.recyclerView2);
+        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+
+        foodItems = new ArrayList<>(); //list to store all food items (updated when database changes)
+        displayList = new ArrayList<>(); //list to store items in one category only (gets updated in switchToType())
+
+        //will this work if foodItems is empty?
+        adapter = new FoodItemAdapter(displayList, this);
+
+        recyclerViewFoodItems = findViewById(R.id.recyclerView2);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewFoodItems.setLayoutManager(mLayoutManager);
-        this.recyclerViewFoodItems.setAdapter(adapter);
-
-        addButton = (FloatingActionButton) findViewById(R.id.addButton);
+        recyclerViewFoodItems.setAdapter(adapter);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,47 +82,52 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 switchToAddItem();
             }
         });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "Calling onStart method");
-        //attaching value event listener
         databaseItems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Calling onDataChange method");
-                //Call function to iterate through DB nodes and add items to list
-                foodItems = loopThroughDBAndAddToList(dataSnapshot);
+                foodItems.clear();
+                displayList.clear();
+                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.e("Get Data", postSnapshot.getValue(FoodItem.class).toString());
+                    foodItems.add(postSnapshot.getValue(FoodItem.class));
+                    displayList.add(postSnapshot.getValue(FoodItem.class));
+                }
                 if (!(foodItems.size() == 0)) {
-                    Log.d(TAG, "List is not empty");
-                    //listManager = new ListManager(foodItems);
-                    //listManager.sortByExpiry();
+                    sortByExpiry(foodItems);
+                    sortByExpiry(displayList);
                     adapter.notifyDataSetChanged();
-                } else {
-                    Log.d(TAG, "List is empty");
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        //when a selection is made in the foodType dropdown
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String sortSelection = mSpinner.getSelectedItem().toString();
+                displayByType(sortSelection);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
     }
 
     @Override
     public void onListItemClick(int position) {
-        FoodItem foodItem = foodItems.get(position);
+        FoodItem foodItem = displayList.get(position);
         Log.d("Click", foodItem.getName());
         showUpdateDeleteDialog(foodItem);
-    }
-
-    public void onSort(View view) {
-
-    }
-
-    public void onSearch(View view){
-
     }
 
     /** showUpdateDeleteDialog is called on long press of an item in the list. The dialog provides the update and delete buttons. */
@@ -148,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             @Override
             public void onClick(View view) {
                 deleteItem(foodItem.getItemId());
-                adapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
@@ -159,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
         startActivity(switchToAddItemIntent);
     }
+
     private void switchToEditItem(FoodItem foodItem) {
         //creating an intent
         Intent switchToEditItemIntent = new Intent(this, EditItemActivity.class);
@@ -183,20 +187,42 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         return true;
     }
 
-    //This method is called in the onDataChange method (in onStart)
-    public ArrayList<FoodItem> loopThroughDBAndAddToList(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "Running method - loopThroughDBAndAddToList");
-        Log.d(TAG, "Clearing list");
-        foodItems.clear();
-        //iterating through all the nodes
-        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-            Log.d(TAG, "Getting item...");
-            //getting item
-            FoodItem foodItem = postSnapshot.getValue(FoodItem.class);
-            //adding item to the list
-            Log.d(TAG, "Adding item to list");
-            foodItems.add(foodItem);
+    public void sortByExpiry(ArrayList<FoodItem> foodItems){
+        if (foodItems.size() != 0) {
+            Comparator<FoodItem> dateComparator = (o1, o2) -> {
+                Date date1 = new Date(o1.year, o1.month, o1.day);
+                Date date2 = new Date(o2.year, o2.month, o2.day);
+                return date1.compareTo(date2);
+            };
+            Collections.sort(foodItems, dateComparator);
         }
-        return foodItems;
+    }
+
+    /* This method is called upon selection of food type dropdown.
+    It adds the items that match the food type chosen to a list, replaces the old adapter, and attaches the adapter to the list.
+    This method does not change the list that contains all food items.
+    Nothing happens if the all food items list is empty.
+    The adapter/visible list doesn't change if the new list is empty.
+     */
+    private void displayByType(String sortSelection) {
+        displayList.clear();
+        Log.d(TAG, "Sort Selection:" + sortSelection);
+        if (foodItems.size() != 0) {
+            //if selection is All, add all items to display list and update adapter
+            if (sortSelection.equals("All")) {
+                for (FoodItem foodItem : foodItems) {
+                    displayList.add(foodItem);
+                }
+                Log.d(TAG, "Added all items to list");
+            } else {
+                for (FoodItem foodItem : foodItems) {
+                    if (foodItem.getFoodType().equals(sortSelection)) {
+                        Log.d(TAG, "Adding item to display list");
+                        displayList.add(foodItem);
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 }

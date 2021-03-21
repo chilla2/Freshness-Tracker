@@ -40,7 +40,6 @@ public class FoodItem {
     public Integer getMonth(){return month;}
     public Integer getYear(){return year;}
     public String getFoodType(){return foodType;}
-    public Date getDate(){return date;}
     public String getFormattedDate() {
 
         //update the calendar

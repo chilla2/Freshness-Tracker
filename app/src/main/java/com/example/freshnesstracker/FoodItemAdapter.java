@@ -51,7 +51,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
             int pos = getAdapterPosition();
             mOnClickListener.onListItemClick(pos);
 
-
         }
     }
 
@@ -83,14 +82,8 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //get number of items in list to set list adapter
-        if (foodItems != null) {
-            Log.d(TAG, "Item count set: " + (foodItems.size()));
-            return foodItems.size();
-        }
-        else{
-            return 0;
-        }
+        Log.d(TAG, "Item count set: " + (foodItems.size()));
+        return foodItems.size();
     }
-
 
 }
