@@ -29,7 +29,6 @@ public class AddItemActivity extends AppCompatActivity {
     Button saveItem;
     DatabaseReference databaseItems;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

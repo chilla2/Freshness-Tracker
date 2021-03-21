@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 switchToAddItem();
             }
         });
-
     }
 
     @Override
@@ -201,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     /* This method is called upon selection of food type dropdown.
     It adds the items that match the food type chosen to a list, replaces the old adapter, and attaches the adapter to the list.
     This method does not change the list that contains all food items.
-    Nothing happens if the all food items list is empty.
-    The adapter/visible list doesn't change if the new list is empty.
      */
     private void displayByType(String sortSelection) {
         displayList.clear();
