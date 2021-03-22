@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.NumberPicker;
+
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -41,7 +43,7 @@ public class EditItemActivity extends AppCompatActivity {
         String itemId  = intent.getStringExtra("itemId");
         String name = intent.getStringExtra("name");
         int day = intent.getIntExtra("day", 1);
-        int month = intent.getIntExtra("month", 1);
+        int month = (intent.getIntExtra("month", 1)) - 1;
         int year = intent.getIntExtra("year", 2022);
         String category = intent.getStringExtra("category");
 
@@ -68,7 +70,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String name = editTextName.getText().toString().trim();
                 String category = spinnerCategory.getSelectedItem().toString();
                 int day = picker.getDayOfMonth();
-                int month = picker.getMonth();
+                int month = picker.getMonth() + 1;
                 int year = picker.getYear();
 
                 //Can't access itemId or intent from here, so must use getIntent and getExtra again in order to retrieve itemId to be passed into updateItem
