@@ -1,5 +1,6 @@
 package com.example.freshnesstracker;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,9 +83,9 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         } else {
             ((ViewHolder) holder).getName().setText(foodItem.getName());
         }
-
         String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
         ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
+        ((ViewHolder) holder).getExpirationDate().setTextColor(Color.BLACK);
     }
 
     @Override

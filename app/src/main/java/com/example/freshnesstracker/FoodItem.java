@@ -2,6 +2,9 @@ package com.example.freshnesstracker;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.Comparator;
+import java.util.Date;
+
 @IgnoreExtraProperties
 public class FoodItem {
     String itemId;
@@ -36,4 +39,7 @@ public class FoodItem {
     public int getYear(){return year;}
     public String getFoodType(){return foodType;}
     public int getQuantity(){return quantity;}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

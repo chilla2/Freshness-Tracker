@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +33,9 @@ import static androidx.recyclerview.widget.RecyclerView.*;
 
 /**
  * Main Activity displays list of food items and their expiration dates from realtime database -
- * Add button in button in bottom right corner switches view to add item screen -
- * Long press on item brings up dialog with buttons to add or delete item -
+ * Add button in bottom right corner switches view to add item screen -
+ * Clicking item brings up dialog with buttons to add or delete item -
  */
-
 public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
 
     private Spinner mSpinner;
@@ -84,11 +84,20 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         });
     }
 
+    /** onStart sets up two event listeners.
+     * One that listens for changes to the database.
+     * One that listens for when a food type is selected from the dropdown.
+     */
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "Calling onStart method");
+
         databaseItems.addValueEventListener(new ValueEventListener() {
+            /**onDataChange keeps the food items lists up-to-date by clearing them,
+             * then parsing through the database and adding all the items in the database to the lists,
+             *  before sorting the lists by expiration date.
+             * */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Calling onDataChange method");
@@ -109,8 +118,14 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        //when a selection is made in the foodType dropdown
+
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
+             * @param parentView
+             * @param selectedItemView
+             * @param position
+             * @param id
+             */
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String sortSelection = mSpinner.getSelectedItem().toString();
@@ -122,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         });
     }
 
+    /** onListItemClick calls the showUpdateDeleteDialog method, passing in the appropriate item.
+     * @param position
+     */
     @Override
     public void onListItemClick(int position) {
         FoodItem foodItem = displayList.get(position);
@@ -129,39 +147,81 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         showUpdateDeleteDialog(foodItem);
     }
 
-    /** showUpdateDeleteDialog is called on long press of an item in the list. The dialog provides the update and delete buttons. */
-    //This function provides the update and delete buttons
+    /** showUpdateDeleteDialog is called when a list item is clicked.
+     * The dialog provides the update and delete buttons.
+     *  If the item quantity is greater than 1, alternative dialog is shown, allowing user to select quantity to be deleted.
+     * */
     private void showUpdateDeleteDialog(FoodItem foodItem) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
-        dialogBuilder.setView(dialogView);
-        final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
-        final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-        dialogBuilder.setTitle(foodItem.getName());
-        final AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-        buttonUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switchToEditItem(foodItem);
-            }
-        });
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteItem(foodItem.getItemId());
-                dialog.dismiss();
-            }
-        });
+        //I would prefer to use an if statement to define the dialogView only, but it won't resolve uses of dialogView outside of an if statement where it is defined. -April
+        if (foodItem.getQuantity() == 1) {
+            final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
+            dialogBuilder.setView(dialogView);
+            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
+            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
+            dialogBuilder.setTitle(foodItem.getName());
+            final AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+            buttonUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switchToEditItem(foodItem);
+                }
+            });
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteItem(foodItem.getItemId());
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            final View dialogView = inflater.inflate(R.layout.update_dialogue2, null);
+            dialogBuilder.setView(dialogView);
+            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
+            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
+            final NumberPicker quantityPicker = (NumberPicker) dialogView.findViewById(R.id.quantityPicker);
+            quantityPicker.setMinValue(1);
+            quantityPicker.setMaxValue(foodItem.getQuantity());
+            dialogBuilder.setTitle(foodItem.getName());
+            final AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+            buttonUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switchToEditItem(foodItem);
+                }
+            });
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int quantitySelected = quantityPicker.getValue();
+                    int quantity = foodItem.getQuantity();
+                    if (quantitySelected == quantity) {
+                        deleteItem(foodItem.getItemId());
+                    } else {
+                        //locating single item in database
+                        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(foodItem.getItemId());
+                        //"deleting" selected quantity and updating the database
+                        foodItem.setQuantity(quantity - quantitySelected);
+                        dR.setValue(foodItem);
+                    }
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
-    /** switchToAddItem method changes activities to the Add Item. This is called when the add button is clicked */
+    /** switchToAddItem changes to the Add Item activity. This is called when the add button is clicked */
     private void switchToAddItem() {
         Intent switchToAddItemIntent = new Intent(this, AddItemActivity.class);
         startActivity(switchToAddItemIntent);
     }
 
+    /** switchToEditItem changes to the Edit Item activity. This is called when the edit button is clicked from the update/delete dialog
+     * @param foodItem
+     */
     private void switchToEditItem(FoodItem foodItem) {
         //creating an intent
         Intent switchToEditItemIntent = new Intent(this, EditItemActivity.class);
@@ -178,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         startActivity(switchToEditItemIntent);
     }
 
+    /** deleteItem removes selected item from the database. The ID is used to locate the correct item in the database */
     private boolean deleteItem(String id) {
         //getting the specified item reference
         DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
@@ -187,6 +248,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         return true;
     }
 
+    /** sortByExpiry takes a food items list, then compares the expiration dates of each item and sorts the list from soonest to latest expiration date
+     * @param foodItems
+     */
     public void sortByExpiry(ArrayList<FoodItem> foodItems){
         if (foodItems.size() != 0) {
             Comparator<FoodItem> dateComparator = (o1, o2) -> {
@@ -198,9 +262,10 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         }
     }
 
-    /* This method is called upon selection of food type dropdown.
-    It adds the items that match the food type chosen to a list, replaces the old adapter, and attaches the adapter to the list.
-    This method does not change the list that contains all food items.
+    /** displayByType clears the displayable food items list,
+     * then parses through the food items reference list
+     * and adds back only the items that are of the appropriate food type.
+     * If the sort selection was "all," all items are added back to the displayable list.
      */
     private void displayByType(String sortSelection) {
         displayList.clear();
