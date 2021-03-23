@@ -30,6 +30,7 @@ public class AddItemActivity extends AppCompatActivity {
     DatePicker datePicker;
     Spinner spinnerCategory;
     Button saveItem;
+    Button cancel;
     DatabaseReference databaseItems;
 
     @Override
@@ -44,10 +45,16 @@ public class AddItemActivity extends AppCompatActivity {
         datePicker = (DatePicker)findViewById(R.id.datePicker);
         spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
         saveItem = (Button) findViewById(R.id.saveItem);
+        cancel  = (Button) findViewById(R.id.cancel);
         saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addItem();
+                switchToMain();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 switchToMain();
             }
         });
@@ -67,22 +74,19 @@ public class AddItemActivity extends AppCompatActivity {
         int month = datePicker.getMonth() + 1;
         int year = datePicker.getYear();
         String category = spinnerCategory.getSelectedItem().toString();
-        //checking if the value is provided
+
+        //checking if name is provided
         if (!TextUtils.isEmpty(name)) {
-            for (int i = 1; i <= quantity ; i++) {
-                //getting a unique id using push().getKey() method
-                //it will create a unique id and we will use it as the Primary Key for our item
-                String id = databaseItems.push().getKey();
-                //creating an item Object
-                FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
-                //Saving the item
-                databaseItems.child(id).setValue(foodItem);
-                Log.d(TAG, "Adding item data to database");
-                //setting edittext to blank again
-                editTextName.setText("");
-                //displaying a success toast
-                Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
-            }
+            //getting a unique id using push().getKey() method
+            String id = databaseItems.push().getKey();
+            //creating an item Object
+            FoodItem foodItem = new FoodItem(id, day, month, year, name, category, quantity);
+            //Saving the item
+            databaseItems.child(id).setValue(foodItem);
+            //setting edittext to blank again
+            editTextName.setText("");
+            //displaying a success toast
+            Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
         } else {
             //if the value is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();

@@ -36,44 +36,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/spinnerLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="323dp"
-        android:layout_marginLeft="323dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="33dp"
-        android:layout_marginRight="33dp"
-        android:layout_marginBottom="5dp"
-        android:inputType="none"
-        android:text="Sort By:"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/foodType"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Spinner
         android:id="@+id/foodType"
         android:layout_width="160dp"
         android:layout_height="40dp"
         android:layout_marginStart="216dp"
         android:layout_marginLeft="216dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="47dp"
         android:layout_marginEnd="35dp"
         android:layout_marginRight="35dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="20dp"
         android:dropDownSelector="@android:drawable/btn_dropdown"
         android:entries="@array/sortTypeList"
         android:spinnerMode="dropdown"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerLabel" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,8 @@
 
     <EditText
         android:id="@+id/editTextName"
+        android:maxLength="15"
+        android:hint="Enter name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -16,7 +18,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:hint="Enter name"
         app:layout_constraintBottom_toTopOf="@+id/categories_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -31,7 +32,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="30dp"
-        android:autoText="false"
         android:text="Quantity:"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -49,7 +49,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="103dp"
         android:layout_marginBottom="396dp"
-        android:autoText="false"
         android:text="Use By:"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -68,7 +67,7 @@
         app:layout_constraintHorizontal_bias="0.552"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.23"></NumberPicker>
+        app:layout_constraintVertical_bias="0.23" />
 
     <DatePicker
         android:id="@+id/datePicker"
@@ -122,5 +121,22 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="97dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="157dp"
+        android:layout_marginLeft="157dp"
+        android:layout_marginEnd="157dp"
+        android:layout_marginRight="157dp"
+        android:layout_marginBottom="257dp"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        app:backgroundTint="#7E7E7E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveItem"
+        app:rippleColor="#FFFFFF" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

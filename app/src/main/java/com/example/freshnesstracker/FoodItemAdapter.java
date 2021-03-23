@@ -73,16 +73,24 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         //link data to the list
         Log.d(TAG, "In onBindViewHolder");
         FoodItem foodItem = foodItems.get(position);
-        //holder.getName().setText(foodItem.getName());
-        ((ViewHolder) holder).getName().setText(foodItem.getName());
+
+        //duplicate items (quantity > 1) will display their quantity next to their name
+        //single items display name only
+        String nameAndQuantity = foodItem.getName() + " (" + foodItem.getQuantity()  + ")";
+        if (foodItem.getQuantity() > 1) {
+            ((ViewHolder) holder).getName().setText(nameAndQuantity);
+        } else {
+            ((ViewHolder) holder).getName().setText(foodItem.getName());
+        }
+
         String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
         ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
     }
 
     @Override
     public int getItemCount() {
-        //get number of items in list to set list adapter
-        Log.d(TAG, "Item count set: " + (foodItems.size()));
+        //get number of UNIQUE items in list to set list adapter
+        Log.d(TAG, "Unique item count is: " + (foodItems.size()));
         return foodItems.size();
     }
 

@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         switchToEditItemIntent.putExtra("month", foodItem.getMonth());
         switchToEditItemIntent.putExtra("year", foodItem.getYear());
         switchToEditItemIntent.putExtra("category", foodItem.getFoodType());
+        switchToEditItemIntent.putExtra("quantity", foodItem.getQuantity());
         //starting the edit activity with intent
         Log.d(TAG, "Switching to Edit Item Activity");
         startActivity(switchToEditItemIntent);
