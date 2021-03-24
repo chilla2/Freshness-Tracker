@@ -14,6 +14,7 @@ public class FoodItem {
     String name;
     String foodType;
     Boolean isExpired;
+    Boolean isExpiring;
     int quantity;
 
     public FoodItem() {
@@ -30,9 +31,7 @@ public class FoodItem {
         this.quantity = quantity;
     }
 
-    public String getItemId() {
-        return itemId;
-    }
+    public String getItemId(){return itemId; }
     public String getName(){return name;}
     public int getDay(){return day;}
     public int getMonth(){return month;}
@@ -42,4 +41,7 @@ public class FoodItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    public void setIsExpired(Boolean expired) {isExpired = expired;}
+    public Boolean getIsExpired() {return isExpired; }
+
 }

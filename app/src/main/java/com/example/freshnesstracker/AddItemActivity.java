@@ -18,6 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Calendar;
 import java.util.Date;
 import android.widget.NumberPicker;
 
@@ -74,7 +76,6 @@ public class AddItemActivity extends AppCompatActivity {
         int month = datePicker.getMonth() + 1;
         int year = datePicker.getYear();
         String category = spinnerCategory.getSelectedItem().toString();
-
         //checking if name is provided
         if (!TextUtils.isEmpty(name)) {
             //getting a unique id using push().getKey() method

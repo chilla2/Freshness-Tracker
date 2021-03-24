@@ -3,8 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignWithParentIfMissing="false"
-    android:layout_gravity="start"
     android:gravity="end"
     android:orientation="horizontal"
     android:paddingTop="10dp"
@@ -12,23 +10,68 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="269dp"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="(name)" />
+
+    <TextView
+        android:id="@+id/textViewSpacer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/adapaterExpirDate"
+        android:textSize="20dp"
+        android:layout_width="121dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:text="@string/expirationDate" />
+
+</LinearLayout>
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignWithParentIfMissing="false"
+    android:layout_gravity="start"
+    android:alpha="@dimen/cardview_compat_inset_shadow"
+    android:gravity="fill"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text="@string/foodListEntry"
         android:textColor="#18E420"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/adapaterExpirDate"
-        android:layout_width="121dp"
+        android:layout_width="137dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="8dp"
+        android:gravity="start"
         android:text="@string/expirationDate"
         android:textColor="#000000"
-        android:textSize="22sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>
+-->

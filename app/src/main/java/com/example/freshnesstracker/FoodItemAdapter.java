@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
 
 public class FoodItemAdapter extends RecyclerView.Adapter {
 
@@ -51,7 +53,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public void onClick(View v) {
             int pos = getAdapterPosition();
             mOnClickListener.onListItemClick(pos);
-
         }
     }
 
@@ -83,9 +84,16 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         } else {
             ((ViewHolder) holder).getName().setText(foodItem.getName());
         }
+
         String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
         ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
-        ((ViewHolder) holder).getExpirationDate().setTextColor(Color.BLACK);
+
+        //set text color based on whether item has expired or not
+        if (foodItem.getIsExpired()) {
+            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.RED);
+        } else {
+            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.GREEN);
+        }
     }
 
     @Override

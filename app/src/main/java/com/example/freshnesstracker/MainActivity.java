@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -103,14 +104,17 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 Log.d(TAG, "Calling onDataChange method");
                 foodItems.clear();
                 displayList.clear();
-                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Log.e("Get Data", postSnapshot.getValue(FoodItem.class).toString());
-                    foodItems.add(postSnapshot.getValue(FoodItem.class));
-                    displayList.add(postSnapshot.getValue(FoodItem.class));
+
+                for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
+                    Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
+                    foodItems.add(itemsSnapshot.getValue(FoodItem.class));
+                    displayList.add(itemsSnapshot.getValue(FoodItem.class));
                 }
                 if (!(foodItems.size() == 0)) {
                     sortByExpiry(foodItems);
                     sortByExpiry(displayList);
+                    checkIfExpired(foodItems);
+                    checkIfExpired(displayList);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -156,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         LayoutInflater inflater = getLayoutInflater();
         //I would prefer to use an if statement to define the dialogView only, but it won't resolve uses of dialogView outside of an if statement where it is defined. -April
         if (foodItem.getQuantity() == 1) {
+            Log.d(TAG, "Showing single item update/dialog");
             final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
             dialogBuilder.setView(dialogView);
             final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
@@ -177,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 }
             });
         } else {
+            Log.d(TAG, "Showing multiple item update/delete dialog");
             final View dialogView = inflater.inflate(R.layout.update_dialogue2, null);
             dialogBuilder.setView(dialogView);
             final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
@@ -251,14 +257,50 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     /** sortByExpiry takes a food items list, then compares the expiration dates of each item and sorts the list from soonest to latest expiration date
      * @param foodItems
      */
-    public void sortByExpiry(ArrayList<FoodItem> foodItems){
+    public void sortByExpiry(ArrayList<FoodItem> foodItems) {
         if (foodItems.size() != 0) {
+            Collections.sort(foodItems, new Comparator<FoodItem>() {
+                public int compare(FoodItem o1, FoodItem o2) {
+                    Calendar date1 = Calendar.getInstance();
+                    date1.set(o1.year, o1.month, o1.day);
+                    Calendar date2 = Calendar.getInstance();
+                    date2.set(o2.year, o2.month, o2.day);
+                    return date1.compareTo(date2);
+                }
+            });
+            /* Below is a variation of the code above. Saving this just in case
             Comparator<FoodItem> dateComparator = (o1, o2) -> {
-                Date date1 = new Date(o1.year, o1.month, o1.day);
-                Date date2 = new Date(o2.year, o2.month, o2.day);
+                Calendar date1 = Calendar.getInstance();
+                date1.set(o1.year, o1.month, o1.day);
+                Calendar date2 = Calendar.getInstance();
+                date2.set(o2.year, o2.month, o2.day);
                 return date1.compareTo(date2);
             };
             Collections.sort(foodItems, dateComparator);
+             */
+        }
+    }
+
+
+    /** checkIfExpired loops through a food items list and compares each item's expiration date to the current date.
+     * If an item is expired, the item's isExpired property is set to true.
+     * This gets called every time the food items lists are updated.
+     * @param foodItems
+     */
+    private void checkIfExpired(ArrayList<FoodItem> foodItems) {
+        for (FoodItem foodItem : foodItems) {
+            //generate expiration date from item's day/month/year
+            Calendar expirationDate = Calendar.getInstance();
+            expirationDate.set(foodItem.getYear(), foodItem.getMonth(), foodItem.getDay(), 0, 0, 0);
+            //get current date, and set time to 0
+            Calendar currentDate = Calendar.getInstance();
+            currentDate.set(Calendar.HOUR_OF_DAY, 0);
+            currentDate.set(Calendar.MINUTE, 0);
+            currentDate.set(Calendar.SECOND, 0);
+            currentDate.set(Calendar.MILLISECOND, 0);
+            //check if expiration date is before current date, and set isExpired to the result (true or false)
+            foodItem.setIsExpired(expirationDate.before(currentDate));
+            Log.d(TAG, "Item: " + foodItem.getName() + " is expired: " + foodItem.getIsExpired());
         }
     }
 
