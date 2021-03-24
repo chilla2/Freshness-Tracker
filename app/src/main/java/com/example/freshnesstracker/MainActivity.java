@@ -16,19 +16,12 @@ import androidx.annotation.Nullable;
 
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AlertDialog;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,20 +36,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
@@ -95,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         foodItems = new ArrayList<>(); //list to store all food items (updated when database changes)
         displayList = new ArrayList<>(); //list to store items in one category only (gets updated in switchToType())
 
-        //will this work if foodItems is empty?
         adapter = new FoodItemAdapter(displayList, this);
 
         recyclerViewFoodItems = findViewById(R.id.recyclerView2);
@@ -285,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     public void onSearch(View view) {
         // needs to  get name from view
         String search = "milk";
+    }
 
     /** sortByExpiry takes a food items list, then compares the expiration dates of each item and sorts the list from soonest to latest expiration date
      * @param foodItems
@@ -300,19 +279,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     return date1.compareTo(date2);
                 }
             });
-            /* Below is a variation of the code above. Saving this just in case
-            Comparator<FoodItem> dateComparator = (o1, o2) -> {
-                Calendar date1 = Calendar.getInstance();
-                date1.set(o1.year, o1.month, o1.day);
-                Calendar date2 = Calendar.getInstance();
-                date2.set(o2.year, o2.month, o2.day);
-                return date1.compareTo(date2);
-            };
-            Collections.sort(foodItems, dateComparator);
-             */
         }
     }
-
 
     /** checkIfExpired loops through a food items list and compares each item's expiration date to the current date.
      * If an item is expired, the item's isExpired property is set to true.
