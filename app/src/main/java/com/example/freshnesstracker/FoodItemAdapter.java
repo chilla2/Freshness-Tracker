@@ -1,5 +1,6 @@
 package com.example.freshnesstracker;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Customized RecycleView.Adapter for generating and displaying FoodItem class information in RecyclerView object
@@ -21,6 +24,12 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
 
     private ArrayList<FoodItem> foodItems;
     public final ListItemClickListener mOnClickListener;
+
+    //color date change variables
+    Date currentTime = Calendar.getInstance().getTime();
+    //code credit: https://stackoverflow.com/questions/4902653/java-util-date-seven-days-ago
+    long DAY_IN_MS = 1000 * 60 * 60 * 24;
+    Date sevenDaysAheadDate= new Date(System.currentTimeMillis() + (7 * DAY_IN_MS));
 
     interface ListItemClickListener{
         void onListItemClick(int position);
@@ -54,6 +63,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(this);
             name = view.findViewById(R.id.name);
             expirationDate = view.findViewById(R.id.adapaterExpirDate);
+
             Log.d(TAG, "Constructor of ViewHolder called");
         }
 
@@ -97,6 +107,22 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         ((ViewHolder) holder).getName().setText(foodItem.getName());
         ((ViewHolder) holder).getExpirationDate().setText(foodItem.getFormattedDate());
 
+        Log.d(TAG, "About to change colors");
+        //set customized color change for dates
+        int colorCase = getExpirationDateCase(foodItem.getDate());
+
+        switch(colorCase) {
+            case 0: ((ViewHolder) holder).name.setTextColor(Color.GREEN);
+                break;
+            case 1: ((ViewHolder) holder).name.setTextColor(Color.YELLOW);
+                break;
+            case 2: ((ViewHolder) holder).name.setTextColor(Color.RED);
+                break;
+
+        }
+
+
+
     }
 
     @Override
@@ -110,6 +136,26 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         else{
             return 0;
         }
+    }
+
+    private int getExpirationDateCase(Date expirationDate) {
+
+        int resultingCase = 0; //default case---green
+
+        //case: food expires within 7 days--yellow
+        if ((expirationDate.getTime() > currentTime.getTime()) && (expirationDate.getTime() < sevenDaysAheadDate.getTime())) {
+            resultingCase = 1;
+            Log.d(TAG, "Resulting case 1 active in getExpirFunc");
+        }
+
+        //case: expiration date has passed, lower value than current date
+        if (expirationDate.getTime() < currentTime.getTime()) {
+            resultingCase = 2;
+            Log.d(TAG, "Resulting case 2 active in getExpirFunc");
+        }
+
+        Log.d(TAG, "Final case report: " + resultingCase);
+        return resultingCase;
     }
 
 
