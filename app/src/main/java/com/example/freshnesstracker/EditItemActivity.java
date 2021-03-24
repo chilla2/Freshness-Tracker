@@ -14,51 +14,60 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import android.widget.NumberPicker;
+
+
 public class EditItemActivity extends AppCompatActivity {
+
     private static final String TAG = "EditItemActivity";
     EditText editTextName;
     DatePicker picker;
     Spinner spinnerCategory;
+    NumberPicker quantityPicker;
     Button saveItem;
+    Button cancel;
     DatabaseReference databaseItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_item);//get the current intent
+        setContentView(R.layout.activity_edit_item);
+
+        //get the current intent
         Intent intent = getIntent();
 
         //get the attached extras from the intent
-        String itemId = intent.getStringExtra("itemId");
+        String itemId  = intent.getStringExtra("itemId");
         String name = intent.getStringExtra("name");
         int day = intent.getIntExtra("day", 1);
-        int month = intent.getIntExtra("month", 1);
+        int month = (intent.getIntExtra("month", 1)) - 1;
         int year = intent.getIntExtra("year", 2022);
         String category = intent.getStringExtra("category");
-
+        int quantity = intent.getIntExtra("quantity", 1);
 
         //get reference for specific item using the ID
-        databaseItem = FirebaseDatabase.getInstance().getReference("foodItems").child(itemId);
-        //DataSnapshot postSnapshot = dataSnapshot.getChildren();
-        //FoodItem foodItem = databaseItem.getValue(FoodItem.class);
-        editTextName = (EditText) findViewById(R.id.foodName);
-        picker = (DatePicker) findViewById(R.id.datePicker);
-        spinnerCategory = (Spinner) findViewById(R.id.foodType);
-        saveItem = (Button) findViewById(R.id.saveItem);
+        databaseItem = FirebaseDatabase.getInstance().getReference("items").child(itemId);
+
+        editTextName = (EditText) findViewById(R.id.editTextName);
+        picker = (DatePicker)findViewById(R.id.datePicker);
+        spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
+        quantityPicker = (NumberPicker) findViewById(R.id.quantityPicker);
+        quantityPicker.setMinValue(1);
+        quantityPicker.setMaxValue(20);
+        saveItem  = (Button) findViewById(R.id.saveItem);
+        cancel  = (Button) findViewById(R.id.cancel);
 
         //set default values to be the previous values of the item
         editTextName.setText(name);
+        picker.init(year, month, day, null);
+        quantityPicker.setValue(quantity);
         //Figure out what position the category is assigned to and set the spinner position to that one
         ArrayAdapter<String> spinnerCategoryAdapter = (ArrayAdapter<String>) spinnerCategory.getAdapter();
         int spinnerPosition = spinnerCategoryAdapter.getPosition(category);
         spinnerCategory.setSelection(spinnerPosition);
-
-        picker.init(year, month, day, null);
-
 
         saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,21 +76,25 @@ public class EditItemActivity extends AppCompatActivity {
                 String name = editTextName.getText().toString().trim();
                 String category = spinnerCategory.getSelectedItem().toString();
                 int day = picker.getDayOfMonth();
-                int month = picker.getMonth();
+                int month = picker.getMonth() + 1;
                 int year = picker.getYear();
-                //FoodType foodType = assignFoodType(category);
+                int quantity = quantityPicker.getValue();
 
                 //Can't access itemId or intent from here, so must use getIntent and getExtra again in order to retrieve itemId to be passed into updateItem
                 Intent intent = getIntent();
-                String itemId = intent.getStringExtra("itemId");
+                String itemId= intent.getStringExtra("itemId");
 
                 if (!TextUtils.isEmpty(name)) {
-                    updateItem(itemId, day, month, year, name, category);
+                    updateItem(itemId, day, month, year, name, category, quantity);
                     switchToMain();
                 }
             }
         });
-
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                switchToMain();
+            }
+        });
 
     }
 
@@ -93,11 +106,11 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     //This is where the database is actually changed
-    private boolean updateItem(String id, int day, int month, int year, String name, String category) {
+    private boolean updateItem(String id, int day, int month, int year, String name, String category, int quantity) {
         //getting the specified item reference
-        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("foodItems").child(id);
+        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
         //updating item
-        FoodItem foodItem = new FoodItem(id, day, month, year, name, category);
+        FoodItem foodItem = new FoodItem(id, day, month, year, name, category, quantity);
         dR.setValue(foodItem);
         Toast.makeText(getApplicationContext(), "Item Updated", Toast.LENGTH_LONG).show();
         return true;

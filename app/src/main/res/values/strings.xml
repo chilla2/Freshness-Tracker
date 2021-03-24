@@ -2,14 +2,25 @@
     <string name="app_name">Freshness Tracker</string>
     <string name="app_label">Freshness Tracker</string>
     <string name="search_hint">Search for Food Item</string>
-    <string-array name="foodTypeList">
+    <string-array name="sortTypeList">
+        <item>All</item>
+        <item>Bakery</item>
         <item>Dairy</item>
+        <item>Dry Goods</item>
         <item>Meat</item>
         <item>Produce</item>
-        <item>Baked</item>
         <item>Canned</item>
         <item>Custom</item>
     </string-array>
+<string-array name="categories_array">
+    <item>Bakery</item>
+    <item>Dairy</item>
+    <item>Dry Goods</item>
+    <item>Meat</item>
+    <item>Produce</item>
+    <item>Canned</item>
+    <item>Custom</item>
+</string-array>
     <string name="expirationDate">mm/dd/yy</string>
     <string name="foodListEntry">Enter your food item!</string>
     <string name="food_name">Food Name</string>

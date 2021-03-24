@@ -1,5 +1,6 @@
 package com.example.freshnesstracker;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -61,14 +63,11 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public void onClick(View v) {
          int pos = getAdapterPosition();
          mOnClickListener.onListItemClick(pos);
-
-
         }
     }
 
     /**
      * Constructor for FoodItemAdapter
-     *
      * @param foodItems
      * @param click
      */
@@ -82,10 +81,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "In onCreateViewHolder");
         View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food, parent, false);
-
         return new ViewHolder(v);
-
-
     }
 
     @Override
@@ -93,24 +89,31 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         //link data to the list
         Log.d(TAG, "In onBindViewHolder");
         FoodItem foodItem = foodItems.get(position);
-        //holder.getName().setText(foodItem.getName());
-        ((ViewHolder) holder).getName().setText(foodItem.getName());
-        ((ViewHolder) holder).getExpirationDate().setText(foodItem.getFormattedDate());
 
+        //duplicate items (quantity > 1) will display their quantity next to their name
+        //single items display name only
+        String nameAndQuantity = foodItem.getName() + " (" + foodItem.getQuantity()  + ")";
+        if (foodItem.getQuantity() > 1) {
+            ((ViewHolder) holder).getName().setText(nameAndQuantity);
+        } else {
+            ((ViewHolder) holder).getName().setText(foodItem.getName());
+        }
+
+        String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
+        ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
+
+        //set text color based on whether item has expired or not
+        if (foodItem.getIsExpired()) {
+            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.RED);
+        } else {
+            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.GREEN);
+        }
     }
 
     @Override
     public int getItemCount() {
-        //get number of items in list to set list adapter
-
-        if (foodItems != null) {
-            Log.d(TAG, "Item count set: " + (foodItems.size()));
-            return foodItems.size();
-        }
-        else{
-            return 0;
-        }
+        //get number of UNIQUE items in list to set list adapter
+        Log.d(TAG, "Unique item count is: " + (foodItems.size()));
+        return foodItems.size();
     }
-
-
 }

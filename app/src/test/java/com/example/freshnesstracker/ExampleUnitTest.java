@@ -15,11 +15,6 @@ import static org.junit.Assert.*;
 /*
 public class ExampleUnitTest {
     @Test
-    public void fileExists() {
-        File fileName = new File("../FOOD_ITEM_LIST.json");
-        assertTrue(fileName.exists());
-    }
-    @Test
     public void isExpired() {
         Date currentDate = new Date();
         FoodItem foodItem = new FoodItem((new Date(121, 1, 20)), "Milk", "Dairy");
