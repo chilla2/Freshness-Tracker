@@ -7,7 +7,7 @@
     android:textSize="20sp"
     tools:context=".AddItemActivity">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editTextName"
         android:layout_width="370dp"
         android:layout_height="56dp"

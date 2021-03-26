@@ -3,10 +3,13 @@ package com.example.freshnesstracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,6 +38,8 @@ public class AddItemActivity extends AppCompatActivity {
     Button cancel;
     DatabaseReference databaseItems;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,10 @@ public class AddItemActivity extends AppCompatActivity {
                 switchToMain();
             }
         });
+
+        //set auto-fill
+        setAutofill();
+
     }
 
     private void switchToMain() {
@@ -92,5 +101,16 @@ public class AddItemActivity extends AppCompatActivity {
             //if the value is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
+    }
+    private void setAutofill() {
+        //get autofill ready, extract resources from file---MUST be called in onCreate
+        Resources res = getResources();
+        String[] FOOD_ITEM_SUGGESTIONS = res.getStringArray(R.array.Food_Item_Suggestions);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this,
+                android.R.layout.simple_dropdown_item_1line, FOOD_ITEM_SUGGESTIONS);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.editTextName);
+        textView.setAdapter(arrayAdapter);
     }
 }

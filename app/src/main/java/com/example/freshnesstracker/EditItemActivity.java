@@ -3,11 +3,13 @@ package com.example.freshnesstracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -47,6 +49,9 @@ public class EditItemActivity extends AppCompatActivity {
         int year = intent.getIntExtra("year", 2022);
         String category = intent.getStringExtra("category");
         int quantity = intent.getIntExtra("quantity", 1);
+
+        //set autofill
+        setAutofill();
 
         //get reference for specific item using the ID
         databaseItem = FirebaseDatabase.getInstance().getReference("items").child(itemId);
@@ -114,5 +119,17 @@ public class EditItemActivity extends AppCompatActivity {
         dR.setValue(foodItem);
         Toast.makeText(getApplicationContext(), "Item Updated", Toast.LENGTH_LONG).show();
         return true;
+    }
+
+    private void setAutofill() {
+        //get autofill ready, extract resources from file---MUST be called in onCreate
+        Resources res = getResources();
+        String[] FOOD_ITEM_SUGGESTIONS = res.getStringArray(R.array.Food_Item_Suggestions);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this,
+                android.R.layout.simple_dropdown_item_1line, FOOD_ITEM_SUGGESTIONS);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.editTextName);
+        textView.setAdapter(arrayAdapter);
     }
 }

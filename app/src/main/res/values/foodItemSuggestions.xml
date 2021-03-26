@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Food_Item_Suggestions">
+        <item>Milk</item>
+        <item>Yogurt</item>
+        <item>Cheese</item>
+        <item>Butter</item>
+        <item>Sour Cream</item>
+        <item>Chicken</item>
+        <item>Ground Beef</item>
+        <item>Eggs</item>
+        <item>Lunch Meat</item>
+        <item>Tortillas</item>
+        <item>Bread</item>
+        <item>Rice</item>
+        <item>Pasta</item>
+        <item>Apples</item>
+        <item>Bananas</item>
+        <item>Spinach</item>
+        <item>Lettuce</item>
+        <item>Carrots</item>
+        <item>Tomatoes</item>
+        <item>Onion</item>
+        <item>Bell Pepper</item>
+        <item>Potatoes</item>
+        <item>Pizza</item>
+        <item>Cookies</item>
+    </string-array>
+</resources>
