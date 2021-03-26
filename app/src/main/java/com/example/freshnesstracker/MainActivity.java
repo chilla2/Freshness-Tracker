@@ -354,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             currentDate.set(Calendar.MILLISECOND, 0);
             //check if expiration date is before current date, and set isExpired to the result (true or false)
             foodItem.setIsExpired(expirationDate.before(currentDate));
+            Log.d("Date", "currentDate: " + currentDate.getTime() + "  Item's expiry: "+ expirationDate.getTime());
             Log.d(TAG, "Item: " + foodItem.getName() + " is expired: " + foodItem.getIsExpired());
         }
     }

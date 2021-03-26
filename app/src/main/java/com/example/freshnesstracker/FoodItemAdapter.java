@@ -37,6 +37,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public final View view;
         public final TextView name;
         public final TextView expirationDate;
+//        public final TextView foodCat;
 
         public TextView getName() {
             return name;
@@ -45,6 +46,9 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public TextView getExpirationDate() {
             return expirationDate;
         }
+//        public TextView getFoodCat() {
+ //           return foodCat;
+   //     }
 
         /**
          *Constructor to set the display/view of the FoodItem information
@@ -56,6 +60,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(this);
             name = view.findViewById(R.id.name);
             expirationDate = view.findViewById(R.id.adapaterExpirDate);
+           // foodCat = view.findViewById((R.id.category));
             Log.d(TAG, "Constructor of ViewHolder called");
         }
 
@@ -98,7 +103,8 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         } else {
             ((ViewHolder) holder).getName().setText(foodItem.getName());
         }
-
+//        String category = foodItem.getFoodType();
+//        ((ViewHolder) holder).getFoodCat().setText(category);
         String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
         ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
 
