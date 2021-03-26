@@ -16,4 +16,6 @@
     <string name="update">Update</string>
     <string name="choose_food_type">Choose food type:</string>
     <string name="new_item">New Item</string>
+    <string name="autoFillHintText">Food Name</string>
+    <string name="foodSuggestionsAutoFillList">foodSuggestionsAutoFillList</string>
 </resources>

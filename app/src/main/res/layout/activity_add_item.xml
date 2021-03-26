@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".AddItemActivity">
 
-    <EditText
-        android:id="@+id/foodName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="12dp"
-        android:ems="11"
-        android:hint="Food Name"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menuTitle" />
-
     <Button
         android:id="@+id/submitItem"
         android:layout_width="wrap_content"
@@ -84,6 +71,19 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/foodTypeLabel" />
+
+    <AutoCompleteTextView
+        android:id="@+id/foodSuggestionsAutoFillList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="12dp"
+        android:ems="11"
+        android:hint="Food Name"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuTitle" />
 
     <!--<RadioGroup
         android:id="@+id/radioGroup"

@@ -5,19 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.util.Log;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 //import com.google.firebase.database.core.view.View;
 
-import java.util.Date;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -53,6 +48,13 @@ public class AddItemActivity extends AppCompatActivity {
 */
 
         //foodListDB = FirebaseDatabase.getInstance();
+
+        //autofil text work
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this,
+                android.R.layout.simple_dropdown_item_1line, FOOD_SUGGESTIONS);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.foodSuggestionsAutoFillList);
+        textView.setAdapter(arrayAdapter);
 
 
     }
@@ -104,4 +106,14 @@ public class AddItemActivity extends AppCompatActivity {
 
        
     }*/
+
+    private static final String[] FOOD_SUGGESTIONS = new String[] {
+      "Milk", "Yogurt", "Cheese", "Butter", "Sour Cream",
+      "Chicken", "Ground Beef", "Eggs", "Lunch Meat",
+      "Tortillas", "Bread", "Rice", "Pasta",
+            "Apples", "Bananas", "Spinach", "Carrots",
+            "Tomatoes", "Onion", "Bell Pepper", "Potatoes",
+            "Pizza", "Cookies"
+
+    };
 }
