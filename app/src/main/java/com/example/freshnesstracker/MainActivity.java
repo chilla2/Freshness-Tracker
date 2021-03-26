@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
     private Spinner mSpinner;
     FloatingActionButton addButton;
+    TextView tv1;
 
     //creating one list to contain all items and remains unchanged except when DB is updated, and one list that will be updated depending on needs of view.
     ArrayList<FoodItem> foodItems;
@@ -68,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
         addButton = findViewById(R.id.addButton);
         mSpinner = findViewById(R.id.foodType);
+        tv1 = (TextView)findViewById(R.id.textView3);
+
 
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
 
@@ -145,6 +150,55 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu , menu) ;
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.all :
+                displayByType("All");
+                tv1.setText("All My Food");
+
+                return true;
+            case R.id.bake:
+                displayByType("Bakery");
+                tv1.setText("My Baked Goods");
+
+                return true;
+            case R.id. can :
+                displayByType("Canned");
+                tv1.setText("My Canned Goods");
+                return true;
+            case R.id.dairy:
+                displayByType("Dairy");
+                tv1.setText("My Dairy");
+                return true;
+            case R.id.dry :
+                displayByType("Dry Goods");
+                tv1.setText("My Dry Goods");
+                return true;
+            case R.id.meat:
+                displayByType("Meat");
+                tv1.setText("All My Meat");
+                return true;
+            case R.id.produce :
+                displayByType("Produce");
+                tv1.setText("Produce!!");
+                return true;
+            case R.id.custom :
+                displayByType("Custom");
+                tv1.setText("My Custom Foods");
+
+                return true;
+            default :
+                return super .onOptionsItemSelected(item) ;
+        }
     }
 
     /** onListItemClick calls the showUpdateDeleteDialog method, passing in the appropriate item.

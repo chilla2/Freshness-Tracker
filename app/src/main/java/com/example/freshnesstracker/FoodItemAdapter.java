@@ -104,9 +104,9 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
 
         //set text color based on whether item has expired or not
         if (foodItem.getIsExpired()) {
-            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.RED);
+            ((ViewHolder) holder).getName().setTextColor(Color.parseColor("#5c1a1b"));
         } else {
-            ((ViewHolder) holder).getExpirationDate().setTextColor(Color.GREEN);
+            ((ViewHolder) holder).getName().setTextColor(Color.parseColor("#386150"));
         }
     }
 
