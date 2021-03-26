@@ -84,11 +84,11 @@
         android:layout_marginBottom="32dp"
         android:dropDownSelector="@android:drawable/btn_dropdown"
         android:entries="@array/categories_array"
-        android:spinnerMode="dropdown"
         android:hint="Category"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@+id/datePicker"
         app:layout_constraintEnd_toStartOf="@+id/quantityPicker"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 

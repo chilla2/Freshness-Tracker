@@ -176,7 +176,11 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteItem(foodItem.getItemId());
+                if (foodItem.getQuantity() == 1) {
+                    deleteItem(foodItem.getItemId());
+                } else {
+                    foodItem.setQuantity(foodItem.getQuantity() - 1);
+                }
                 dialog.dismiss();
             }
         });
