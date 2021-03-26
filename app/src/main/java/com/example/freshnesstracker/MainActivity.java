@@ -25,6 +25,7 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +41,17 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
+
+import android.os.Bundle;
+import android.app.AlarmManager ;
+import android.app.Notification ;
+import android.app.PendingIntent ;
+import android.content.Context ;
+import android.content.Intent ;
+import android.os.Bundle ;
+import android.os.SystemClock ;
+import android.view.Menu ;
+import android.view.MenuItem ;
 
 /**
  * Main Activity displays list of food items and their expiration dates from realtime database -
@@ -62,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     DatabaseReference databaseItems;
 
     private static final String TAG = "MainActivity";
+    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    private final static String default_notification_channel_id = "default" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 Log.d(TAG, "Calling onDataChange method");
                 foodItems.clear();
                 displayList.clear();
+                tv1.setText("All My Food");
 
                 for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
                     Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
@@ -169,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             case R.id.bake:
                 displayByType("Bakery");
                 tv1.setText("My Baked Goods");
+                scheduleNotification(getNotification( "Food is expiring tomorrow." ) , 5000 ) ;
 
                 return true;
             case R.id. can :
@@ -311,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         //removing item
         dR.removeValue();
         Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();
+
         return true;
     }
 
@@ -345,7 +362,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         for (FoodItem foodItem : foodItems) {
             //generate expiration date from item's day/month/year
             Calendar expirationDate = Calendar.getInstance();
-            expirationDate.set(foodItem.getYear(), foodItem.getMonth(), foodItem.getDay(), 0, 0, 0);
+            int month = foodItem.getMonth();
+            month -= 1;
+            expirationDate.set(foodItem.getYear(), month, foodItem.getDay(), 0, 0, 0);
             //get current date, and set time to 0
             Calendar currentDate = Calendar.getInstance();
             currentDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -384,5 +403,30 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             }
             adapter.notifyDataSetChanged();
         }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+        scheduleNotification(getNotification( "Food is expiring tomorrow." ) , 5000 ) ;
+        Toast.makeText(getApplicationContext(), "onStop called", Toast.LENGTH_LONG).show();
+    }
+    private void scheduleNotification (Notification notification , int delay) {
+        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+        long futureInMillis = SystemClock. elapsedRealtime () + delay ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
+    }
+    private Notification getNotification (String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText(content) ;
+        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+        builder.setAutoCancel( true ) ;
+        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 }

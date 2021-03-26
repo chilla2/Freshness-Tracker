@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto" >
+    android:background="#f1ecce"
+    <item
+        android:id = "@+id/all"
+        app:showAsAction = "never"
+        android:title = "All Items" />
+    <item
+        android:id = "@+id/bake"
+        app:showAsAction = "never"
+        android:title = "Baked Goods" />
+    <item
+        android:id = "@+id/can"
+        app:showAsAction = "never"
+        android:title = "Canned Goods" />
+    <item
+        android:id = "@+id/dairy"
+        app:showAsAction = "never"
+        android:title = "Dairy" />
+    <item
+        android:id = "@+id/dry"
+        app:showAsAction = "never"
+        android:title = "Dry Goods" />
+
+    <item
+        android:id = "@+id/meat"
+        app:showAsAction = "never"
+        android:title = "Meat" />
+    <item
+        android:id = "@+id/produce"
+        app:showAsAction = "never"
+        android:title = "Produce" />
+
+    <item
+        android:id = "@+id/custom"
+        app:showAsAction = "never"
+        android:title = "Custom" />
+
+</menu>
