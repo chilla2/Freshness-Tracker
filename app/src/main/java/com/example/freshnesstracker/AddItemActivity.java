@@ -2,8 +2,15 @@ package com.example.freshnesstracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -11,112 +18,79 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.core.view.View;
 
+import java.util.Calendar;
 import java.util.Date;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.NumberPicker;
+
 
 public class AddItemActivity extends AppCompatActivity {
 
-    private FirebaseDatabase foodListDB;
-    private DatabaseReference foodListDBReference;
     private static final String TAG = "AddItemActivity";
-
+    EditText editTextName;
+    NumberPicker quantityPicker;
+    DatePicker datePicker;
+    Spinner spinnerCategory;
+    Button saveItem;
+    Button cancel;
+    DatabaseReference databaseItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-
-        Spinner spinner = (Spinner) findViewById(R.id.foodType);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.foodTypeList, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-
-
-        foodListDB = FirebaseDatabase.getInstance();
-        foodListDBReference = foodListDB.getReference();
-
-
-        ChildEventListener childEventListener = new ChildEventListener() {
+        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+        editTextName = (EditText) findViewById(R.id.editTextName);
+        quantityPicker = (NumberPicker) findViewById(R.id.quantityPicker);
+        quantityPicker.setMinValue(1);
+        quantityPicker.setMaxValue(20);
+        datePicker = (DatePicker)findViewById(R.id.datePicker);
+        spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
+        saveItem = (Button) findViewById(R.id.saveItem);
+        cancel  = (Button) findViewById(R.id.cancel);
+        saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-
-                // A new item has been added, add it to the displayed list
-                FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
-
-                // ...
+            public void onClick(View view) {
+                addItem();
+                switchToMain();
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so displayed the changed item.
-                FoodItem newItem = dataSnapshot.getValue(FoodItem.class);
-                String itemKey = dataSnapshot.getKey();
-
-                // ...
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                switchToMain();
             }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-                // An item has changed, use the key to determine if we are displaying this
-                // item and if so remove it.
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-                // FoodItem movedComment = dataSnapshot.getValue(Comment.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-            }
-        };
-        foodListDBReference.addChildEventListener(childEventListener);
-
-
+        });
     }
 
-    /*
-    private FoodItem getNewItemData() {
-        This should take input from user and create food item to be passed into the save method
-    }
-    */
-
-
-
-
-    //Later, this method can just take a FoodItem as a parameter
-    public void saveItem(Date date, String name, FoodType foodType) {
-
-    }
-    public void onSaveFoodItem(View view){
-        FoodItem foodItem1 = new FoodItem( new Date(121, 2, 11), "yogurt", FoodType.Dairy);
+    private void switchToMain() {
+        Intent switchToMainIntent = new Intent(this, MainActivity.class);
+        Log.d(TAG, "Switching to main activity");
+        startActivity(switchToMainIntent);
     }
 
-
-    public void onRadioButtonClicked(View view) {
+    private void addItem() {
+        //getting the values to save
+        String name = editTextName.getText().toString().trim();
+        int quantity = quantityPicker.getValue();
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth() + 1;
+        int year = datePicker.getYear();
+        String category = spinnerCategory.getSelectedItem().toString();
+        //checking if name is provided
+        if (!TextUtils.isEmpty(name)) {
+            //getting a unique id using push().getKey() method
+            String id = databaseItems.push().getKey();
+            //creating an item Object
+            FoodItem foodItem = new FoodItem(id, day, month, year, name, category, quantity);
+            //Saving the item
+            databaseItems.child(id).setValue(foodItem);
+            //setting edittext to blank again
+            editTextName.setText("");
+            //displaying a success toast
+            Toast.makeText(this, "Item added", Toast.LENGTH_LONG).show();
+        } else {
+            //if the value is not given displaying a toast
+            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+        }
     }
 }

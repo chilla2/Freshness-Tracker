@@ -1,53 +1,53 @@
 package com.example.freshnesstracker;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.Comparator;
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 
+@IgnoreExtraProperties
 public class FoodItem {
-
-    public Date date;
-    public String name;
-    public FoodType foodType;
-    private Boolean isExpired;
-
-    //calendar class to get month/date/year
-    private Calendar calendar = Calendar.getInstance();
+    String itemId;
+    int day;
+    int month;
+    int year;
+    String name;
+    String foodType;
+    Boolean isExpired;
+    Boolean isExpiring;
+    int quantity;
 
     public FoodItem() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public FoodItem(Date date, String name, FoodType foodType) {
-        this.date = date;
+    public FoodItem(String itemId, int day, int month, int year, String name, String foodType, int quantity) {
+        this.itemId = itemId;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         this.name = name;
         this.foodType = foodType;
-        calendar.setTime(date);
+        this.quantity = quantity;
     }
 
-
-    public Date getDate(){return date;}
-    public void setDate(Date aDate){ this.date = aDate;}
-
-
-    public FoodType getFoodType(){return foodType;}
-    public void setFoodType(FoodType aFoodType){this.foodType = aFoodType;}
-
-
+    public String getItemId(){return itemId; }
     public String getName(){return name;}
-    public void setName(String aName){this.name = aName;}
-
-    // save food item to database...
-    public void saveFoodItem(){
-
+    public int getDay(){return day;}
+    public int getMonth(){return month;}
+    public int getYear(){return year;}
+    public String getFoodType(){return foodType;}
+    public int getQuantity(){return quantity;}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
-
-    public String getFormattedDate() {
-        String year = String.valueOf(calendar.get(Calendar.YEAR));
-        String month = String.valueOf(calendar.get(Calendar.MONTH));
-        String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-
-        String formattedDate = month + "/" + day + "/" + year;
-        return formattedDate;
-    }
+    public void setIsExpired(Boolean expired) {isExpired = expired;}
+    public Boolean getIsExpired() {return isExpired; }
 
 }
+
+
+
