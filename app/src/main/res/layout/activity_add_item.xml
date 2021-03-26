@@ -41,7 +41,7 @@
 
     <NumberPicker
         android:id="@+id/quantityPicker"
-
+        android:hint="Quantity"
         android:layout_width="66dp"
         android:layout_height="64dp"
         android:layout_marginTop="18dp"
@@ -65,6 +65,7 @@
         android:layout_marginBottom="10dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
+        android:hint="Expiration date"
         app:layout_constraintBottom_toTopOf="@+id/saveItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -84,6 +85,7 @@
         android:dropDownSelector="@android:drawable/btn_dropdown"
         android:entries="@array/categories_array"
         android:spinnerMode="dropdown"
+        android:hint="Category"
         app:layout_constraintBottom_toTopOf="@+id/datePicker"
         app:layout_constraintEnd_toStartOf="@+id/quantityPicker"
         app:layout_constraintHorizontal_bias="0.0"

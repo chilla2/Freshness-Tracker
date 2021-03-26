@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         foodItems = new ArrayList<>(); //list to store all food items (updated when database changes)
         displayList = new ArrayList<>(); //list to store items in one category only (gets updated in switchToType())
 
-        //will this work if foodItems is empty?
         adapter = new FoodItemAdapter(displayList, this);
 
         recyclerViewFoodItems = findViewById(R.id.recyclerView2);
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 Log.d(TAG, "Calling onDataChange method");
                 foodItems.clear();
                 displayList.clear();
+                String sortSelection = mSpinner.getSelectedItem().toString();
 
                 for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
                     Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     sortByExpiry(displayList);
                     checkIfExpired(foodItems);
                     checkIfExpired(displayList);
+                    displayByType(sortSelection);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -158,65 +159,27 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private void showUpdateDeleteDialog(FoodItem foodItem) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        //I would prefer to use an if statement to define the dialogView only, but it won't resolve uses of dialogView outside of an if statement where it is defined. -April
-        if (foodItem.getQuantity() == 1) {
-            Log.d(TAG, "Showing single item update/dialog");
-            final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
-            dialogBuilder.setView(dialogView);
-            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
-            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-            dialogBuilder.setTitle(foodItem.getName());
-            final AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-            buttonUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switchToEditItem(foodItem);
-                }
-            });
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteItem(foodItem.getItemId());
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            Log.d(TAG, "Showing multiple item update/delete dialog");
-            final View dialogView = inflater.inflate(R.layout.update_dialogue2, null);
-            dialogBuilder.setView(dialogView);
-            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
-            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-            final NumberPicker quantityPicker = (NumberPicker) dialogView.findViewById(R.id.quantityPicker);
-            quantityPicker.setMinValue(1);
-            quantityPicker.setMaxValue(foodItem.getQuantity());
-            dialogBuilder.setTitle(foodItem.getName());
-            final AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-            buttonUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switchToEditItem(foodItem);
-                }
-            });
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int quantitySelected = quantityPicker.getValue();
-                    int quantity = foodItem.getQuantity();
-                    if (quantitySelected == quantity) {
-                        deleteItem(foodItem.getItemId());
-                    } else {
-                        //locating single item in database
-                        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(foodItem.getItemId());
-                        //"deleting" selected quantity and updating the database
-                        foodItem.setQuantity(quantity - quantitySelected);
-                        dR.setValue(foodItem);
-                    }
-                    dialog.dismiss();
-                }
-            });
-        }
+        Log.d(TAG, "Showing update/delete dialog");
+        final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
+        dialogBuilder.setView(dialogView);
+        final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
+        final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
+        dialogBuilder.setTitle(foodItem.getName());
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchToEditItem(foodItem);
+            }
+        });
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteItem(foodItem.getItemId());
+                dialog.dismiss();
+            }
+        });
     }
 
     /** switchToAddItem changes to the Add Item activity. This is called when the add button is clicked */
@@ -268,19 +231,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     return date1.compareTo(date2);
                 }
             });
-            /* Below is a variation of the code above. Saving this just in case
-            Comparator<FoodItem> dateComparator = (o1, o2) -> {
-                Calendar date1 = Calendar.getInstance();
-                date1.set(o1.year, o1.month, o1.day);
-                Calendar date2 = Calendar.getInstance();
-                date2.set(o2.year, o2.month, o2.day);
-                return date1.compareTo(date2);
-            };
-            Collections.sort(foodItems, dateComparator);
-             */
         }
     }
-
 
     /** checkIfExpired loops through a food items list and compares each item's expiration date to the current date.
      * If an item is expired, the item's isExpired property is set to true.

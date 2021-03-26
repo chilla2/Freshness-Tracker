@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-
     <EditText
         android:id="@+id/editTextQuery"
         android:layout_width="212dp"
