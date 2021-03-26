@@ -102,6 +102,11 @@ public class AddItemActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
     }
+
+    /***
+     * setAutoFill prepares the autofilltextview display element by loading the food list
+     * suggestions from the "foodItemSuggestions.xml" and setting it.
+     */
     private void setAutofill() {
         //get autofill ready, extract resources from file---MUST be called in onCreate
         Resources res = getResources();

@@ -121,6 +121,10 @@ public class EditItemActivity extends AppCompatActivity {
         return true;
     }
 
+    /***
+     * setAutoFill prepares the autofilltextview display element by loading the food list
+     * suggestions from the "foodItemSuggestions.xml" and setting it.
+     */
     private void setAutofill() {
         //get autofill ready, extract resources from file---MUST be called in onCreate
         Resources res = getResources();
