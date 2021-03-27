@@ -3,10 +3,13 @@ package com.example.freshnesstracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import android.widget.NumberPicker;
 
-
+import static com.example.freshnesstracker.MainActivity.PATH;
 public class AddItemActivity extends AppCompatActivity {
 
     private static final String TAG = "AddItemActivity";
@@ -35,18 +38,20 @@ public class AddItemActivity extends AppCompatActivity {
     Button cancel;
     DatabaseReference databaseItems;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+        databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
         editTextName = (EditText) findViewById(R.id.editTextName);
         quantityPicker = (NumberPicker) findViewById(R.id.quantityPicker);
         quantityPicker.setMinValue(1);
         quantityPicker.setMaxValue(20);
         datePicker = (DatePicker)findViewById(R.id.datePicker);
         spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
-        saveItem = (Button) findViewById(R.id.saveItem);
+        saveItem = (Button) findViewById(R.id.saveItem);/**/
         cancel  = (Button) findViewById(R.id.cancel);
         saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +61,14 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                switchToMain();
+           public void onClick(View v) {
+              switchToMain();
             }
         });
+
+        //set auto-fill
+        setAutofill();
+
     }
 
     private void switchToMain() {
@@ -92,5 +101,21 @@ public class AddItemActivity extends AppCompatActivity {
             //if the value is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
+    }
+
+    /***
+     * setAutoFill prepares the autofilltextview display element by loading the food list
+     * suggestions from the "foodItemSuggestions.xml" and setting it.
+     */
+    private void setAutofill() {
+        //get autofill ready, extract resources from file---MUST be called in onCreate
+        Resources res = getResources();
+        String[] FOOD_ITEM_SUGGESTIONS = res.getStringArray(R.array.Food_Item_Suggestions);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this,
+                android.R.layout.simple_dropdown_item_1line, FOOD_ITEM_SUGGESTIONS);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.editTextName);
+        textView.setAdapter(arrayAdapter);
     }
 }

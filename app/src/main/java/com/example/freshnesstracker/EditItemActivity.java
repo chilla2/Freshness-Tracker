@@ -3,11 +3,13 @@ package com.example.freshnesstracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.widget.NumberPicker;
-
+import static com.example.freshnesstracker.MainActivity.PATH;
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -48,8 +50,11 @@ public class EditItemActivity extends AppCompatActivity {
         String category = intent.getStringExtra("category");
         int quantity = intent.getIntExtra("quantity", 1);
 
+        //set autofill
+        setAutofill();
+
         //get reference for specific item using the ID
-        databaseItem = FirebaseDatabase.getInstance().getReference("items").child(itemId);
+        databaseItem = FirebaseDatabase.getInstance().getReference(PATH).child(itemId);
 
         editTextName = (EditText) findViewById(R.id.editTextName);
         picker = (DatePicker)findViewById(R.id.datePicker);
@@ -108,11 +113,27 @@ public class EditItemActivity extends AppCompatActivity {
     //This is where the database is actually changed
     private boolean updateItem(String id, int day, int month, int year, String name, String category, int quantity) {
         //getting the specified item reference
-        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
+        DatabaseReference dR = FirebaseDatabase.getInstance().getReference(PATH).child(id);
         //updating item
         FoodItem foodItem = new FoodItem(id, day, month, year, name, category, quantity);
         dR.setValue(foodItem);
         Toast.makeText(getApplicationContext(), "Item Updated", Toast.LENGTH_LONG).show();
         return true;
+    }
+
+    /***
+     * setAutoFill prepares the autofilltextview display element by loading the food list
+     * suggestions from the "foodItemSuggestions.xml" and setting it.
+     */
+    private void setAutofill() {
+        //get autofill ready, extract resources from file---MUST be called in onCreate
+        Resources res = getResources();
+        String[] FOOD_ITEM_SUGGESTIONS = res.getStringArray(R.array.Food_Item_Suggestions);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String> (this,
+                android.R.layout.simple_dropdown_item_1line, FOOD_ITEM_SUGGESTIONS);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.editTextName);
+        textView.setAdapter(arrayAdapter);
     }
 }
