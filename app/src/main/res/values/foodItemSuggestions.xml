@@ -25,5 +25,13 @@
         <item>Potatoes</item>
         <item>Pizza</item>
         <item>Cookies</item>
+        <item>Ice Cream</item>
+        <item>Cake</item>
+        <item>Oranges</item>
+        <item>Strawberries</item>
+        <item>Watermelon</item>
+        <item>Salad Mix</item>
+        <item>Leftovers</item>
+
     </string-array>
 </resources>

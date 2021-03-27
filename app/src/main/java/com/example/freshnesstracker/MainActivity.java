@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         setContentView(R.layout.activity_main);
 
         addButton = findViewById(R.id.addButton);
-        mSpinner = findViewById(R.id.foodType);
+        //mSpinner = findViewById(R.id.foodType);
         tv1 = (TextView)findViewById(R.id.textView3);
 
 
@@ -149,13 +149,13 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             }
         });
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            /** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
+   /*     mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            *//** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
              * @param parentView
              * @param selectedItemView
              * @param position
              * @param id
-             */
+             *//*
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String sortSelection = mSpinner.getSelectedItem().toString();
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
-        });
+        });*/
     }
 
     @Override
@@ -261,9 +261,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             dialogBuilder.setView(dialogView);
             final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
             final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-            final NumberPicker quantityPicker = (NumberPicker) dialogView.findViewById(R.id.quantityPicker);
-            quantityPicker.setMinValue(1);
-            quantityPicker.setMaxValue(foodItem.getQuantity());
+           // final NumberPicker quantityPicker = (NumberPicker) dialogView.findViewById(R.id.quantityPicker);
+            //quantityPicker.setMinValue(1);
+            //quantityPicker.setMaxValue(foodItem.getQuantity());
             dialogBuilder.setTitle(foodItem.getName());
             final AlertDialog dialog = dialogBuilder.create();
             dialog.show();
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int quantitySelected = quantityPicker.getValue();
+                    int quantitySelected = 1;
                     int quantity = foodItem.getQuantity();
                     if (quantitySelected == quantity) {
                         deleteItem(foodItem.getItemId());
@@ -405,8 +405,30 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
-        scheduleNotification(getNotification( "Food is expiring tomorrow." ) , 5000 ) ;
-        Toast.makeText(getApplicationContext(), "onStop called", Toast.LENGTH_LONG).show();
+        if (displayList.size() < 1){
+            //do nothing
+        }
+
+        else if (displayList.get(0).isExpired) {
+            scheduleNotification(getNotification("You have food that's not fresh! Check use-by dates"), 150000);
+        }
+        else {
+            Calendar expirationDate = Calendar.getInstance();
+            int month = displayList.get(0).getMonth();
+            month -= 1;
+            expirationDate.set(displayList.get(0).getYear(), month, displayList.get(0).getDay(), 10, 0, 0);
+            scheduleNotification2(getNotification("You have food that's not fresh! Check use-by dates"), expirationDate.getTimeInMillis());
+            Log.d("notification", "set for"+ expirationDate.getTime());
+        }
+
+    }private void scheduleNotification2 (Notification notification , long delay) {
+        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , delay , pendingIntent) ;
     }
     private void scheduleNotification (Notification notification , int delay) {
         Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
