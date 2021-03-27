@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private static final String TAG = "MainActivity";
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    public static final String PATH ="April" ; //Reference for database
+    public static final String PATH ="Hadassah" ; //Reference for database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
