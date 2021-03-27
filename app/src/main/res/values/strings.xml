@@ -27,4 +27,9 @@
     <string name="update">Update</string>
     <string name="choose_food_type">Choose food type:</string>
     <string name="new_item">New Item</string>
+    <string name="use_by">Use By:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="grocery_item">Grocery Item</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

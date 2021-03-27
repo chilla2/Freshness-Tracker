@@ -51,7 +51,7 @@ public class AddItemActivity extends AppCompatActivity {
         quantityPicker.setMaxValue(20);
         datePicker = (DatePicker)findViewById(R.id.datePicker);
         spinnerCategory = (Spinner) findViewById(R.id.categories_spinner);
-        saveItem = (Button) findViewById(R.id.saveItem);
+        saveItem = (Button) findViewById(R.id.saveItem);/**/
         cancel  = (Button) findViewById(R.id.cancel);
         saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,8 +61,8 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                switchToMain();
+           public void onClick(View v) {
+              switchToMain();
             }
         });
 

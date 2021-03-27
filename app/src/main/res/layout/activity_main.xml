@@ -24,8 +24,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
         class="android.support.v7.widget.RecyclerView"
-        android:layout_width="339dp"
-        android:layout_height="616dp"
+        android:layout_width="347dp"
+        android:layout_height="585dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -38,21 +38,33 @@
 
     <Spinner
         android:id="@+id/foodType"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="216dp"
-        android:layout_marginLeft="216dp"
-        android:layout_marginTop="47dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="40dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
         android:dropDownSelector="@android:drawable/btn_dropdown"
         android:entries="@array/sortTypeList"
         android:spinnerMode="dropdown"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="331dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center|top"
+        android:text="All My Food"
+        android:textColor="@color/purple_700"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

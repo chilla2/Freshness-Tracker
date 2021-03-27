@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +25,7 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +42,17 @@ import java.util.Comparator;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
+import android.os.Bundle;
+import android.app.AlarmManager ;
+import android.app.Notification ;
+import android.app.PendingIntent ;
+import android.content.Context ;
+import android.content.Intent ;
+import android.os.Bundle ;
+import android.os.SystemClock ;
+import android.view.Menu ;
+import android.view.MenuItem ;
+
 /**
  * Main Activity displays list of food items and their expiration dates from realtime database -
  * Add button in bottom right corner switches view to add item screen -
@@ -48,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
     private Spinner mSpinner;
     FloatingActionButton addButton;
+    TextView tv1;
 
     //creating one list to contain all items and remains unchanged except when DB is updated, and one list that will be updated depending on needs of view.
     ArrayList<FoodItem> foodItems;
@@ -59,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     DatabaseReference databaseItems;
 
     private static final String TAG = "MainActivity";
+    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    private final static String default_notification_channel_id = "default" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
         addButton = findViewById(R.id.addButton);
         mSpinner = findViewById(R.id.foodType);
+        tv1 = (TextView)findViewById(R.id.textView3);
+
 
         databaseItems = FirebaseDatabase.getInstance().getReference("items");
 
@@ -110,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 Log.d(TAG, "Calling onDataChange method");
                 foodItems.clear();
                 displayList.clear();
+                tv1.setText("All My Food");
 
                 for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
                     Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
@@ -145,6 +165,54 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu , menu) ;
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.all :
+                displayByType("All");
+                tv1.setText("All My Food");
+
+                return true;
+            case R.id.bake:
+                displayByType("Bakery");
+                tv1.setText("My Baked Goods");
+                return true;
+            case R.id. can :
+                displayByType("Canned");
+                tv1.setText("My Canned Goods");
+                return true;
+            case R.id.dairy:
+                displayByType("Dairy");
+                tv1.setText("My Dairy");
+                return true;
+            case R.id.dry :
+                displayByType("Dry Goods");
+                tv1.setText("My Dry Goods");
+                return true;
+            case R.id.meat:
+                displayByType("Meat");
+                tv1.setText("All My Meat");
+                return true;
+            case R.id.produce :
+                displayByType("Produce");
+                tv1.setText("Produce!!");
+                return true;
+            case R.id.custom :
+                displayByType("Custom");
+                tv1.setText("My Custom Foods");
+
+                return true;
+            default :
+                return super .onOptionsItemSelected(item) ;
+        }
     }
 
     /** onListItemClick calls the showUpdateDeleteDialog method, passing in the appropriate item.
@@ -257,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         //removing item
         dR.removeValue();
         Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();
+
         return true;
     }
 
@@ -291,7 +360,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         for (FoodItem foodItem : foodItems) {
             //generate expiration date from item's day/month/year
             Calendar expirationDate = Calendar.getInstance();
-            expirationDate.set(foodItem.getYear(), foodItem.getMonth(), foodItem.getDay(), 0, 0, 0);
+            int month = foodItem.getMonth();
+            month -= 1;
+            expirationDate.set(foodItem.getYear(), month, foodItem.getDay(), 0, 0, 0);
             //get current date, and set time to 0
             Calendar currentDate = Calendar.getInstance();
             currentDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -300,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             currentDate.set(Calendar.MILLISECOND, 0);
             //check if expiration date is before current date, and set isExpired to the result (true or false)
             foodItem.setIsExpired(expirationDate.before(currentDate));
+            Log.d("Date", "currentDate: " + currentDate.getTime() + "  Item's expiry: "+ expirationDate.getTime());
             Log.d(TAG, "Item: " + foodItem.getName() + " is expired: " + foodItem.getIsExpired());
         }
     }
@@ -329,5 +401,30 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             }
             adapter.notifyDataSetChanged();
         }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+        scheduleNotification(getNotification( "Food is expiring tomorrow." ) , 5000 ) ;
+        Toast.makeText(getApplicationContext(), "onStop called", Toast.LENGTH_LONG).show();
+    }
+    private void scheduleNotification (Notification notification , int delay) {
+        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+        long futureInMillis = SystemClock. elapsedRealtime () + delay ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
+    }
+    private Notification getNotification (String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText(content) ;
+        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+        builder.setAutoCancel( true ) ;
+        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 }
