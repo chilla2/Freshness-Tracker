@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 Log.d(TAG, "Calling onDataChange method");
                 foodItems.clear();
                 displayList.clear();
+                String sortSelection = mSpinner.getSelectedItem().toString();
 
                 for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
                     Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     sortByExpiry(displayList);
                     checkIfExpired(foodItems);
                     checkIfExpired(displayList);
+                    displayByType(sortSelection);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -164,65 +166,31 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private void showUpdateDeleteDialog(FoodItem foodItem) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        //I would prefer to use an if statement to define the dialogView only, but it won't resolve uses of dialogView outside of an if statement where it is defined. -April
-        if (foodItem.getQuantity() == 1) {
-            Log.d(TAG, "Showing single item update/dialog");
-            final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
-            dialogBuilder.setView(dialogView);
-            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
-            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-            dialogBuilder.setTitle(foodItem.getName());
-            final AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-            buttonUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switchToEditItem(foodItem);
-                }
-            });
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        Log.d(TAG, "Showing update/delete dialog");
+        final View dialogView = inflater.inflate(R.layout.update_dialogue, null);
+        dialogBuilder.setView(dialogView);
+        final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
+        final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
+        dialogBuilder.setTitle(foodItem.getName());
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchToEditItem(foodItem);
+            }
+        });
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (foodItem.getQuantity() == 1) {
                     deleteItem(foodItem.getItemId());
-                    dialog.dismiss();
+                } else {
+                    foodItem.setQuantity(foodItem.getQuantity() - 1);
                 }
-            });
-        } else {
-            Log.d(TAG, "Showing multiple item update/delete dialog");
-            final View dialogView = inflater.inflate(R.layout.update_dialogue2, null);
-            dialogBuilder.setView(dialogView);
-            final Button buttonUpdate = (Button) dialogView.findViewById(R.id.buttonUpdateItem);
-            final Button buttonDelete = (Button) dialogView.findViewById(R.id.buttonDeleteItem);
-            final NumberPicker quantityPicker = (NumberPicker) dialogView.findViewById(R.id.quantityPicker);
-            quantityPicker.setMinValue(1);
-            quantityPicker.setMaxValue(foodItem.getQuantity());
-            dialogBuilder.setTitle(foodItem.getName());
-            final AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-            buttonUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switchToEditItem(foodItem);
-                }
-            });
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int quantitySelected = quantityPicker.getValue();
-                    int quantity = foodItem.getQuantity();
-                    if (quantitySelected == quantity) {
-                        deleteItem(foodItem.getItemId());
-                    } else {
-                        //locating single item in database
-                        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(foodItem.getItemId());
-                        //"deleting" selected quantity and updating the database
-                        foodItem.setQuantity(quantity - quantitySelected);
-                        dR.setValue(foodItem);
-                    }
-                    dialog.dismiss();
-                }
-            });
-        }
+                dialog.dismiss();
+            }
+        });
     }
 
     /** switchToAddItem changes to the Add Item activity. This is called when the add button is clicked */
