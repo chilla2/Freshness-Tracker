@@ -228,11 +228,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         return true;
     }
 
-    public void onSearch(View view) {
-        // needs to  get name from view
-        String search = "milk";
-    }
-
     /** sortByExpiry takes a food items list, then compares the expiration dates of each item and sorts the list from soonest to latest expiration date
      * @param foodItems
      */
