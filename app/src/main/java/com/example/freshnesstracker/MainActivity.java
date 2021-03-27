@@ -60,7 +60,7 @@ import android.view.MenuItem ;
  */
 public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
 
-    private Spinner mSpinner;
+    //private Spinner mSpinner;
     FloatingActionButton addButton;
     TextView tv1;
     TextView welcome;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private static final String TAG = "MainActivity";
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    public static final String PATH ="Pat1" ; //Reference for database
+    public static final String PATH ="April" ; //Reference for database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         //mSpinner = findViewById(R.id.foodType);
         tv1 = (TextView)findViewById(R.id.textView3);
         welcome = (TextView)findViewById(R.id.welcome);
-
 
         databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
 
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                 foodItems.clear();
                 displayList.clear();
                 tv1.setText("All My Food");
-                String sortSelection = mSpinner.getSelectedItem().toString();
+                //String sortSelection = mSpinner.getSelectedItem().toString();
 
                 for(DataSnapshot itemsSnapshot : dataSnapshot.getChildren()) {
                     Log.e("Get Data", itemsSnapshot.getValue(FoodItem.class).toString());
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     sortByExpiry(displayList);
                     checkIfExpired(foodItems);
                     checkIfExpired(displayList);
-                    displayByType(sortSelection);
+                    displayByType("All");
                     adapter.notifyDataSetChanged();
                 }
                 else{
@@ -158,14 +157,15 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
+        /** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
+         * @param parentView
+         * @param selectedItemView
+         * @param position
+         * @param id
+         */
+        /*
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            /** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
-             * @param parentView
-             * @param selectedItemView
-             * @param position
-             * @param id
-             */
+
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String sortSelection = mSpinner.getSelectedItem().toString();
@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+         */
     }
 
     @Override
