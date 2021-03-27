@@ -17,12 +17,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Grocery Item"
+        android:hint="@string/grocery_item"
         android:maxLength="15"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveItem" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -32,7 +32,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="right"
-        android:text="Use By:"
+        android:text="@string/use_by"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/datePicker"
@@ -46,7 +46,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:gravity="right"
-        android:text="Quantity:"
+        android:text="@string/quantity"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/quantityPicker"
@@ -91,13 +91,27 @@
 
     <Button
         android:id="@+id/saveItem"
-        android:layout_width="79dp"
-        android:layout_height="49dp"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="126dp"
+        android:layout_marginLeft="126dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        app:backgroundTint="#7E7E7E"
+        app:layout_constraintStart_toEndOf="@+id/saveItem"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker"
+        app:rippleColor="#FFFFFF" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

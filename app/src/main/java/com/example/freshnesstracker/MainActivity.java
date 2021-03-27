@@ -184,8 +184,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             case R.id.bake:
                 displayByType("Bakery");
                 tv1.setText("My Baked Goods");
-                scheduleNotification(getNotification( "Food is expiring tomorrow." ) , 5000 ) ;
-
                 return true;
             case R.id. can :
                 displayByType("Canned");
