@@ -3,6 +3,9 @@ package com.example.freshnesstracker;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Comparator;
+import android.util.Log;
+
+import java.util.Calendar;
 import java.util.Date;
 
 @IgnoreExtraProperties
@@ -45,3 +48,6 @@ public class FoodItem {
     public Boolean getIsExpired() {return isExpired; }
 
 }
+
+
+

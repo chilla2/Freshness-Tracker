@@ -2,18 +2,26 @@ package com.example.freshnesstracker;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.content.Context;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
@@ -219,6 +226,11 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         dR.removeValue();
         Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();
         return true;
+    }
+
+    public void onSearch(View view) {
+        // needs to  get name from view
+        String search = "milk";
     }
 
     /** sortByExpiry takes a food items list, then compares the expiration dates of each item and sorts the list from soonest to latest expiration date
