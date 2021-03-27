@@ -264,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     deleteItem(foodItem.getItemId());
                 } else {
                     foodItem.setQuantity(foodItem.getQuantity() - 1);
+                    adapter.notifyDataSetChanged();
                 }
                 dialog.dismiss();
             }
