@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private Spinner mSpinner;
     FloatingActionButton addButton;
     TextView tv1;
+    TextView welcome;
 
     //creating one list to contain all items and remains unchanged except when DB is updated, and one list that will be updated depending on needs of view.
     ArrayList<FoodItem> foodItems;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private static final String TAG = "MainActivity";
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
+    public static final String PATH ="Pat1" ; //Reference for database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +88,10 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         addButton = findViewById(R.id.addButton);
         //mSpinner = findViewById(R.id.foodType);
         tv1 = (TextView)findViewById(R.id.textView3);
+        welcome = (TextView)findViewById(R.id.welcome);
 
 
-        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+        databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
 
         foodItems = new ArrayList<>(); //list to store all food items (updated when database changes)
         displayList = new ArrayList<>(); //list to store items in one category only (gets updated in switchToType())
@@ -141,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                     sortByExpiry(displayList);
                     checkIfExpired(foodItems);
                     checkIfExpired(displayList);
+                    adapter.notifyDataSetChanged();
+                }
+                else{
+                    welcome.setText("Welcome to the Freshness Tracker! Click the add button to start.");
+                    displayList.clear();
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -282,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
                         deleteItem(foodItem.getItemId());
                     } else {
                         //locating single item in database
-                        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(foodItem.getItemId());
+                        DatabaseReference dR = FirebaseDatabase.getInstance().getReference(PATH).child(foodItem.getItemId());
                         //"deleting" selected quantity and updating the database
                         foodItem.setQuantity(quantity - quantitySelected);
                         dR.setValue(foodItem);
@@ -321,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     /** deleteItem removes selected item from the database. The ID is used to locate the correct item in the database */
     private boolean deleteItem(String id) {
         //getting the specified item reference
-        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
+        DatabaseReference dR = FirebaseDatabase.getInstance().getReference(PATH).child(id);
         //removing item
         dR.removeValue();
         Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG).show();

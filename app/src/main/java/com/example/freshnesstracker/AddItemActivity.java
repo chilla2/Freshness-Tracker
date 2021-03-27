@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import android.widget.NumberPicker;
 
-
+import static com.example.freshnesstracker.MainActivity.PATH;
 public class AddItemActivity extends AppCompatActivity {
 
     private static final String TAG = "AddItemActivity";
@@ -44,7 +44,7 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        databaseItems = FirebaseDatabase.getInstance().getReference("items");
+        databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
         editTextName = (EditText) findViewById(R.id.editTextName);
         quantityPicker = (NumberPicker) findViewById(R.id.quantityPicker);
         quantityPicker.setMinValue(1);

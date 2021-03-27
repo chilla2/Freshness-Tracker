@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.widget.NumberPicker;
-
+import static com.example.freshnesstracker.MainActivity.PATH;
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class EditItemActivity extends AppCompatActivity {
         setAutofill();
 
         //get reference for specific item using the ID
-        databaseItem = FirebaseDatabase.getInstance().getReference("items").child(itemId);
+        databaseItem = FirebaseDatabase.getInstance().getReference(PATH).child(itemId);
 
         editTextName = (EditText) findViewById(R.id.editTextName);
         picker = (DatePicker)findViewById(R.id.datePicker);
@@ -113,7 +113,7 @@ public class EditItemActivity extends AppCompatActivity {
     //This is where the database is actually changed
     private boolean updateItem(String id, int day, int month, int year, String name, String category, int quantity) {
         //getting the specified item reference
-        DatabaseReference dR = FirebaseDatabase.getInstance().getReference("items").child(id);
+        DatabaseReference dR = FirebaseDatabase.getInstance().getReference(PATH).child(id);
         //updating item
         FoodItem foodItem = new FoodItem(id, day, month, year, name, category, quantity);
         dR.setValue(foodItem);
