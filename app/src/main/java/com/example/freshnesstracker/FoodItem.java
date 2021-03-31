@@ -2,11 +2,10 @@ package com.example.freshnesstracker;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Comparator;
-import android.util.Log;
-
-import java.util.Calendar;
-import java.util.Date;
+/**
+ * FoodItem contains an Id, day, month, year, name, foodType, quantity,
+ * and boolean value titled isExpired. The class includes getters and setters.
+ */
 
 @IgnoreExtraProperties
 public class FoodItem {
@@ -17,7 +16,6 @@ public class FoodItem {
     String name;
     String foodType;
     Boolean isExpired;
-    Boolean isExpiring;
     int quantity;
 
     public FoodItem() {

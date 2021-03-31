@@ -27,6 +27,15 @@ import java.util.Date;
 import android.widget.NumberPicker;
 
 import static com.example.freshnesstracker.MainActivity.PATH;
+
+
+/**
+ * AddItem Activity takes inputs from the user to create a foodItem object.
+ * Inputs for name of food item, category of food item, quantity of fooditem,
+ * and an use by spinner. Add button creates food item and pushes it to the database
+ * and returns the user to the main page. Cancel button returns the user to the main
+ * page without saving the data.
+ */
 public class AddItemActivity extends AppCompatActivity {
 
     private static final String TAG = "AddItemActivity";
@@ -38,7 +47,9 @@ public class AddItemActivity extends AppCompatActivity {
     Button cancel;
     DatabaseReference databaseItems;
 
-
+/**
+ *  onCreate assigns variables and the database reference. It also sets the click listeners
+ */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +81,20 @@ public class AddItemActivity extends AppCompatActivity {
         setAutofill();
 
     }
-
+/**
+ * switchToMain returns the user to them MainActivity
+ * */
     private void switchToMain() {
         Intent switchToMainIntent = new Intent(this, MainActivity.class);
         Log.d(TAG, "Switching to main activity");
         startActivity(switchToMainIntent);
     }
-
+/**
+ * addItem gets the user input, gets a new id and creates a food item.
+ * It adds the new object to the database and displays a toast informing the
+ * user that the item was successfully added.  If the method is called before
+ * the user enters a name for the fooditem at toast prompts the user to enter a name.
+ * */
     private void addItem() {
         //getting the values to save
         String name = editTextName.getText().toString().trim();

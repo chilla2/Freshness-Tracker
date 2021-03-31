@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     private static final String TAG = "MainActivity";
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    public static final String PATH ="Hadassah" ; //Reference for database
+    public static final String PATH ="items" ; //Reference for database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         }
 
         else if (displayList.get(0).isExpired) {
-            scheduleNotification(getNotification("You have food that's not fresh! Check use-by dates"), 150000);
+            scheduleNotification(getNotification("You have food that's not fresh! Check use-by dates"), 1500000);
         }
         else {
             Calendar expirationDate = Calendar.getInstance();

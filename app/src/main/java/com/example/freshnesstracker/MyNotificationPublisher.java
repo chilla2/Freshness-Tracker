@@ -9,9 +9,22 @@ import android.content.Intent;
 
 import static com.example.freshnesstracker.MainActivity.NOTIFICATION_CHANNEL_ID;
 
+/**
+ MyNotificationPublisher handles recieving the notification and
+ and handing it off to the notification Manager.
+ */
+
 public class MyNotificationPublisher extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "notification-id" ;
     public static String NOTIFICATION = "notification" ;
+
+    /**
+     * @param context
+     * @param intent
+     * creates a notification manager and an intent.  recieves the notification and takes care of publishing
+     * */
+
+
     public void onReceive (Context context , Intent intent) {
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context. NOTIFICATION_SERVICE ) ;
         Notification notification = intent.getParcelableExtra( NOTIFICATION ) ;
