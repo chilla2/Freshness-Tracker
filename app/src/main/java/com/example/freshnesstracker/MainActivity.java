@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
@@ -58,7 +60,7 @@ import android.view.MenuItem ;
  * Add button in bottom right corner switches view to add item screen -
  * Clicking item brings up dialog with buttons to add or delete item -
  */
-public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements FoodItemAdapter.ListItemClickListener, SearchView.OnQueryTextListener {
 
     //private Spinner mSpinner;
     FloatingActionButton addButton;
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
     RecyclerView recyclerViewFoodItems;
     FoodItemAdapter adapter;
+
+    SearchView editSearch;
 
     DatabaseReference databaseItems;
 
@@ -182,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     public boolean onCreateOptionsMenu (Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu , menu) ;
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
         return true;
     }
     @Override
@@ -420,5 +427,32 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         builder.setAutoCancel( true ) ;
         builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
         return builder.build() ;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filter(newText);
+        return false;
+    }
+
+    // Filter Class
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        displayList.clear();
+        if (charText.length() == 0) {
+            displayList.addAll(foodItems);
+        } else {
+            for (FoodItem foodItem : foodItems) {
+                if (foodItem.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    displayList.add(foodItem);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }
