@@ -1,29 +1,27 @@
 package com.example.freshnesstracker;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.Intent;
-import android.content.SharedPreferences;
+//import android.content.res.Resources;
+//import android.content.Intent;
+//import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+//import androidx.annotation.NonNull;
+//import androidx.annotation.Nullable;
 
 import android.widget.Button;
-import android.widget.EditText;
+//import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -42,18 +40,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-import static androidx.recyclerview.widget.RecyclerView.*;
-
-import android.os.Bundle;
 import android.app.AlarmManager ;
 import android.app.Notification ;
 import android.app.PendingIntent ;
-import android.content.Context ;
-import android.content.Intent ;
-import android.os.Bundle ;
+
 import android.os.SystemClock ;
-import android.view.Menu ;
-import android.view.MenuItem ;
+
 
 /**
  * Main Activity displays list of food items and their expiration dates from realtime database -

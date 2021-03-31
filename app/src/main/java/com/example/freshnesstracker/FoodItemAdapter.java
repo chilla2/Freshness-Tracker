@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -24,11 +23,11 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     private ArrayList<FoodItem> foodItems;
     public final ListItemClickListener mOnClickListener;
 
+    //set listner for items
     interface ListItemClickListener{
         void onListItemClick(int position);
     }
 
-    //static class for ViewHolder---used so it is in same namespace
 
     /**
      * Static class that customizes the viewHolder for FoodItemAdapter
@@ -37,7 +36,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public final View view;
         public final TextView name;
         public final TextView expirationDate;
-//        public final TextView foodCat;
 
         public TextView getName() {
             return name;
@@ -46,9 +44,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         public TextView getExpirationDate() {
             return expirationDate;
         }
-//        public TextView getFoodCat() {
- //           return foodCat;
-   //     }
 
         /**
          *Constructor to set the display/view of the FoodItem information
@@ -60,7 +55,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(this);
             name = view.findViewById(R.id.name);
             expirationDate = view.findViewById(R.id.adapaterExpirDate);
-           // foodCat = view.findViewById((R.id.category));
             Log.d(TAG, "Constructor of ViewHolder called");
         }
 
@@ -85,13 +79,14 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "In onCreateViewHolder");
+        //attach view holder to item_food XML layout
         View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        //link data to the list
+        //link data to the list for display
         Log.d(TAG, "In onBindViewHolder");
         FoodItem foodItem = foodItems.get(position);
 
@@ -103,8 +98,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter {
         } else {
             ((ViewHolder) holder).getName().setText(foodItem.getName());
         }
-//        String category = foodItem.getFoodType();
-//        ((ViewHolder) holder).getFoodCat().setText(category);
+
         String formattedDate = foodItem.month + "/" + foodItem.day + "/" + foodItem.year;
         ((ViewHolder) holder).getExpirationDate().setText(formattedDate);
 
