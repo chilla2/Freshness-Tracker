@@ -2,7 +2,9 @@ package com.example.freshnesstracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.widget.NumberPicker;
-import static com.example.freshnesstracker.MainActivity.PATH;
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -31,6 +32,7 @@ public class EditItemActivity extends AppCompatActivity {
     NumberPicker quantityPicker;
     Button saveItem;
     Button cancel;
+    String PATH;
     DatabaseReference databaseItem;
 
     @Override
@@ -52,6 +54,10 @@ public class EditItemActivity extends AppCompatActivity {
 
         //set autofill
         setAutofill();
+
+        //get unique database reference key from shared preferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        PATH = sharedPreferences.getString("key", null);
 
         //get reference for specific item using the ID
         databaseItem = FirebaseDatabase.getInstance().getReference(PATH).child(itemId);

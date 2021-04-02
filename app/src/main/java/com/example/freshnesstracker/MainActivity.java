@@ -4,6 +4,8 @@ import android.content.Intent;
 //import android.content.res.Resources;
 //import android.content.Intent;
 //import android.content.SharedPreferences;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,10 +72,11 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
 
     DatabaseReference databaseItems;
 
+    String PATH;
+
     private static final String TAG = "MainActivity";
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    public static final String PATH ="items" ; //Reference for database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +85,22 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         setContentView(R.layout.activity_main);
 
         addButton = findViewById(R.id.addButton);
-        //mSpinner = findViewById(R.id.foodType);
         tv1 = (TextView)findViewById(R.id.textView3);
         welcome = (TextView)findViewById(R.id.welcome);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        PATH = sharedPreferences.getString("key", null);
+
+        //if there is not already a unique key (for accessing database node), create one and save it to shared preferences
+        if (PATH == null) {
+            Calendar currentTime = Calendar.getInstance();
+            String uniqueId= currentTime.getTime().toString();
+            editor.putString("key", uniqueId); // Storing string
+            editor.commit();
+        }
+        Log.d(TAG, "The unique key is: " + PATH);
 
         databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
 
@@ -153,76 +169,41 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        /** onItemSelected takes the selected food type from the dropdown, then passes that food type into displayByType
-         * @param parentView
-         * @param selectedItemView
-         * @param position
-         * @param id
-         */
-        /*
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String sortSelection = mSpinner.getSelectedItem().toString();
-                displayByType(sortSelection);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
-         */
     }
 
+    /**
+     * onCreateOptionsMenu adds all of the sort options to the snowman menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
+        Resources res = getResources();
+        String[] sortOptions = res.getStringArray(R.array.sortTypeList);
+        for (String sortOption : sortOptions) {
+            menu.add(sortOption);
+        }
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu , menu) ;
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
+        getMenuInflater().inflate(R.menu.main_menu, menu) ;
         return true;
     }
+
+    /**
+     * onOptionsItemSelected is triggered when an item is clicked in the snowman sort menu.
+     * It gets the name of the selected sort option, sets the title of the view to that name,
+     * then displays the food items that match the selected option.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.all :
-                displayByType("All");
-                tv1.setText("All My Food");
-
-                return true;
-            case R.id.bake:
-                displayByType("Bakery");
-                tv1.setText("My Baked Goods");
-                return true;
-            case R.id. can :
-                displayByType("Canned");
-                tv1.setText("My Canned Goods");
-                return true;
-            case R.id.dairy:
-                displayByType("Dairy");
-                tv1.setText("My Dairy");
-                return true;
-            case R.id.dry :
-                displayByType("Dry Goods");
-                tv1.setText("My Dry Goods");
-                return true;
-            case R.id.meat:
-                displayByType("Meat");
-                tv1.setText("All My Meat");
-                return true;
-            case R.id.produce :
-                displayByType("Produce");
-                tv1.setText("Produce!!");
-                return true;
-            case R.id.custom :
-                displayByType("Custom");
-                tv1.setText("My Custom Foods");
-
-                return true;
-            default :
-                return super .onOptionsItemSelected(item) ;
-        }
+        String name = (String) item.getTitle();
+        displayByType(name);
+        tv1.setText(name);
+        return true;
     }
 
     /** onListItemClick calls the showUpdateDeleteDialog method, passing in the appropriate item.
