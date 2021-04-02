@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     RecyclerView recyclerViewFoodItems;
     FoodItemAdapter adapter;
 
-    SearchView editSearch;
-
     DatabaseReference databaseItems;
 
     String PATH;
@@ -413,7 +411,10 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         return false;
     }
 
-    // Filter Class
+    /**
+     * Uses query from the SearchView to filter the food list. Dynamically filters the list as the user types
+     * @param charText
+     */
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         displayList.clear();
