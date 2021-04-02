@@ -10,7 +10,7 @@
         <item>Meat</item>
         <item>Produce</item>
         <item>Canned</item>
-        <item>Custom</item>
+        <item>Other</item>
     </string-array>
 <string-array name="categories_array">
     <item>Bakery</item>
@@ -19,7 +19,7 @@
     <item>Meat</item>
     <item>Produce</item>
     <item>Canned</item>
-    <item>Custom</item>
+    <item>Other</item>
 </string-array>
     <string name="expirationDate">mm/dd/yy</string>
     <string name="foodListEntry">Enter your food item!</string>

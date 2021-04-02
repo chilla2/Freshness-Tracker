@@ -2,7 +2,9 @@ package com.example.freshnesstracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,9 +20,6 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import android.widget.NumberPicker;
-
-import static com.example.freshnesstracker.MainActivity.PATH;
-
 
 /**
  * AddItem Activity takes inputs from the user to create a foodItem object.
@@ -38,16 +37,18 @@ public class AddItemActivity extends AppCompatActivity {
     Spinner spinnerCategory;
     Button saveItem;
     Button cancel;
+    String PATH;
     DatabaseReference databaseItems;
 
-/**
+    /**
  *  onCreate assigns variables and the database reference. It also sets the click listeners
  */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        PATH = sharedPreferences.getString("key", null);
         databaseItems = FirebaseDatabase.getInstance().getReference(PATH);
         editTextName = (EditText) findViewById(R.id.editTextName);
         quantityPicker = (NumberPicker) findViewById(R.id.quantityPicker);

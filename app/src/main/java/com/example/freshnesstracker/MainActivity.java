@@ -184,10 +184,10 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
             menu.add(sortOption);
         }
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu) ;
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
-        getMenuInflater().inflate(R.menu.main_menu, menu) ;
         return true;
     }
 
