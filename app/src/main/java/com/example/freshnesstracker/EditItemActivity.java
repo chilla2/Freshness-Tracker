@@ -35,6 +35,9 @@ public class EditItemActivity extends AppCompatActivity {
     String PATH;
     DatabaseReference databaseItem;
 
+    /**
+     *  onCreate retrieves the data associated with the selected item and sets the defaults for the input fields accordingly.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +112,9 @@ public class EditItemActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  switchToMain returns to the Main Actvity.
+     */
     //go back to main, where onDataChange will be called upon returning
     private void switchToMain() {
         Intent switchToMainIntent = new Intent(this, MainActivity.class);
@@ -116,6 +122,9 @@ public class EditItemActivity extends AppCompatActivity {
         startActivity(switchToMainIntent);
     }
 
+    /**
+     *  updateItem locates the selected item in the database and updates its properties.
+     */
     //This is where the database is actually changed
     private boolean updateItem(String id, int day, int month, int year, String name, String category, int quantity) {
         //getting the specified item reference

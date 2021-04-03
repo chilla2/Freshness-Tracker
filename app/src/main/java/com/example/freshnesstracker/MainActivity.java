@@ -185,12 +185,25 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
         getMenuInflater().inflate(R.menu.main_menu, menu) ;
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+             @Override
+             public boolean onMenuItemActionCollapse(MenuItem item) {
+                 // when the search item is collasped, show all items again
+                 displayByType("All");
+                 adapter.notifyDataSetChanged();
+                 return true; // Return true to collapse action view
+             }
+             @Override
+             public boolean onMenuItemActionExpand(MenuItem item) {
+                 return true;
+             }
+         });
         searchView.setOnQueryTextListener(this);
         return true;
     }
 
     /**
-     * onOptionsItemSelected is triggered when an item is clicked in the snowman sort menu.
+     * onOptionsItemSelected is triggered when an item is clicked in the action bar menu.
      * It gets the name of the selected sort option, sets the title of the view to that name,
      * then displays the food items that match the selected option.
      * @param item
@@ -199,8 +212,10 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String name = (String) item.getTitle();
-        displayByType(name);
-        tv1.setText(name);
+        if (!item.getTitle().equals("Search")) {
+            displayByType(name);
+            tv1.setText(name);
+        }
         return true;
     }
 

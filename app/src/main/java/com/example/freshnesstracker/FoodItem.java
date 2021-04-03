@@ -6,7 +6,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
  * FoodItem contains an Id, day, month, year, name, foodType, quantity,
  * and boolean value titled isExpired. The class includes getters and setters.
  */
-
 @IgnoreExtraProperties
 public class FoodItem {
     String itemId;

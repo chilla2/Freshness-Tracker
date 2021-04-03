@@ -12,10 +12,8 @@
         android:theme="@style/Theme.FreshnessTracker">
         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@xml/searchable" />
-        android:usesCleartextTraffic="true" >
-            android:name=".EditItemActivity"
-            android:label="Edit Item"/>/>
+            android:resource="@xml/searchable"
+            android:usesCleartextTraffic="true" />
         <activity
             android:name=".AddItemActivity"
             android:label="Add Item"
