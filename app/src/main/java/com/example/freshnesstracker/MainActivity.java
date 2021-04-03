@@ -370,51 +370,47 @@ public class MainActivity extends AppCompatActivity implements FoodItemAdapter.L
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
-        if (displayList.size() < 1){
+        if (displayList.size() < 1) {
             //do nothing
-        }
-
-        else if (displayList.get(0).isExpired) {
+        } else if (displayList.get(0).isExpired) {
             scheduleNotification(getNotification("You have food that's not fresh! Check use-by dates"), 1500000);
+        } else {
+            scheduleNotification(getNotification("Time to check your Freshness tracker. Check  those use-by dates"), 172800000);
+            Log.d("notification", "set for 48 hrs");
         }
-        else {
-            Calendar expirationDate = Calendar.getInstance();
-            int month = displayList.get(0).getMonth();
-            month -= 1;
-            expirationDate.set(displayList.get(0).getYear(), month, displayList.get(0).getDay(), 10, 0, 0);
-            scheduleNotification2(getNotification("You have food that's not fresh! Check use-by dates"), expirationDate.getTimeInMillis());
-            Log.d("notification", "set for"+ expirationDate.getTime());
-        }
-
-    }private void scheduleNotification2 (Notification notification , long delay) {
-        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
-        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
-        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , delay , pendingIntent) ;
-    }
-    private void scheduleNotification (Notification notification , int delay) {
-        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
-        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
-        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
-        long futureInMillis = SystemClock. elapsedRealtime () + delay ;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
-    }
-    private Notification getNotification (String content) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
-        builder.setContentTitle( "Scheduled Notification" ) ;
-        builder.setContentText(content) ;
-        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
-        builder.setAutoCancel( true ) ;
-        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
-        return builder.build() ;
     }
 
+        /**
+         * ScheduleNotification method receives the pending notification and the count in milliseconds until displayed.
+         * it creates the intents and schedules with the alarmManager.
+         * @param notification
+         * @param delay
+         *
+         * */
+
+        private void scheduleNotification (Notification notification , long delay) {
+            Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
+            notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+            notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+            PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+            long futureInMillis = SystemClock. elapsedRealtime () + delay ;
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
+            assert alarmManager != null;
+            alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
+        }
+        /** getNotification receives the message to include in the notication.  It builds the notification
+         * and will be passed to scheduleNotification.
+         * @param content
+         */
+        private Notification getNotification (String content) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+            builder.setContentTitle( "Scheduled Notification" ) ;
+            builder.setContentText(content) ;
+            builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+            builder.setAutoCancel( true ) ;
+            builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+            return builder.build() ;
+        }
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
